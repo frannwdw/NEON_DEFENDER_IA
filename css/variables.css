@@ -1,0 +1,90 @@
+/* ==========================================================================
+   1. VARIABLES, BASE RESET Y ANIMACIONES BASE
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap');
+
+:root {
+    --fondo-profundo: #020206;
+    --fondo-consola: rgba(4, 4, 12, 0.18);
+    --fondo-tarjeta: rgba(10, 10, 30, 0.12);
+    --cyan: #00ffcc;
+    --magenta: #ff00ff;
+    --azul: #0066ff;
+    --amarillo: #ffcc00;
+    --rojo-neon: #ff0055;
+    --texto: #d1e2f7;
+    --texto-dim: #637794;
+    --borde-trans: rgba(0, 255, 204, 0.12);
+    
+    --glow-cyan: 0 0 10px rgba(0, 255, 252, 0.35), 0 0 25px rgba(0, 255, 252, 0.1);
+    --glow-magenta: 0 0 10px rgba(255, 0, 255, 0.35), 0 0 25px rgba(255, 0, 255, 0.1);
+    
+    --font-display: 'Orbitron', monospace;
+    --font-body: 'Rajdhani', sans-serif;
+}
+
+/* RESET BASE */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    background-color: var(--fondo-profundo);
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    color: var(--texto);
+    font-family: var(--font-body);
+    font-size: 15px;
+    background-color: transparent !important;
+}
+
+/* VIDEO DE FONDO Y REJILLA CRT */
+#bg-video {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    min-width: 100vw;
+    min-height: 100vh;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+    z-index: -3;
+    opacity: 0.92;
+    pointer-events: none;
+}
+
+.bg-grid {
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(0, 255, 204, 0.012) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 204, 0.012) 1px, transparent 1px);
+    background-size: 55px 55px;
+    animation: gridScroll 18s linear infinite;
+    pointer-events: none;
+    z-index: -2;
+}
+
+@keyframes gridScroll {
+    0% { background-position: 0 0; }
+    100% { background-position: 55px 55px; }
+}
+
+.scanlines {
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.12) 2px,
+        rgba(0, 0, 0, 0.12) 4px);
+    pointer-events: none;
+    z-index: 9999;
+}

@@ -1,0 +1,145 @@
+/* ==========================================================================
+   4. DISEÑO EXTREMADAMENTE RESPONSIVO Y MODO MÓVIL (CELULARES)
+   ========================================================================== */
+@media (max-width: 1024px) {
+    .tactical-console { grid-template-columns: 200px 1fr; }
+    .diagnostics-panel { 
+        grid-column: 1 / span 2; 
+        border-left: none; 
+        border-top: 1px solid rgba(255, 255, 255, 0.05); 
+        flex-direction: row; 
+    }
+}
+
+@media (max-width: 768px) {
+    body, html { 
+        overflow-y: auto; 
+        height: auto; 
+    }
+    
+    /* Desactivar videos pesados y decoraciones de fondo en celular */
+    #bg-video, .bg-grid, .bg-radial, .scanlines {
+        display: none !important;
+    }
+    
+    /* Forzar fondo puramente negro sólido en celulares */
+    body {
+        background: #000000 !important;
+    }
+
+    /* Landing de bienvenida en celular: apilado limpio y scrollable */
+    .landing-container {
+        justify-content: flex-start;
+        padding-top: 35px;
+        overflow-y: auto;
+    }
+
+    .landing-header { margin-bottom: 25px; }
+    .landing-features {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-bottom: 30px;
+    }
+    .feature-card { padding: 15px; }
+    .feature-card p { font-size: 12px; }
+    .btn-launch-console { 
+        padding: 14px 40px; 
+        width: 100%; 
+        max-width: 280px; 
+        margin-bottom: 40px; 
+    }
+
+    /* MODAL DE JUEGO MÓVIL: ELIMINACIÓN DE RUIDO VISUAL Y BARRAS */
+    .tactical-console {
+        display: block !important;
+        height: 100vh !important;
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Ocultar Barra Lateral Izquierda */
+    .sidebar-nav {
+        display: none !important;
+    }
+
+    /* Redirigir la sección central para ocupar el 100% de la pantalla */
+    .operations-panel {
+        width: 100% !important;
+        height: 100% !important;
+        padding: 10px !important;
+        border: none !important;
+    }
+
+    /* Ocultar cabecera de consola en móvil */
+    .panel-header {
+        display: none !important;
+    }
+
+    /* Ajustar el canvas al máximo de la pantalla adaptable */
+    .tab-content {
+        height: 100% !important;
+    }
+
+    #tab-combat {
+        justify-content: center !important;
+    }
+
+    .seccion-camara {
+        height: auto !important;
+        aspect-ratio: 16 / 9 !important;
+        border-radius: 6px !important;
+        border: 1px solid rgba(0, 255, 204, 0.3) !important;
+    }
+
+    #lienzo-juego {
+        width: 100% !important;
+        max-height: 100% !important;
+        aspect-ratio: 16 / 9 !important;
+    }
+
+    /* Ocultar footer HTML */
+    .console-footer {
+        display: none !important;
+    }
+
+    /* CÁMARA PIP FLOTANTE EN ESQUINA SUPERIOR DERECHA */
+    .diagnostics-panel {
+        position: absolute !important;
+        top: 15px !important;
+        right: 15px !important;
+        width: 100px !important;
+        height: 75px !important;
+        border: none !important;
+        background: transparent !important;
+        padding: 0 !important;
+        z-index: 100 !important;
+        pointer-events: none !important;
+        display: block !important;
+    }
+
+    /* Ocultar telemetrías y LEDs redundantes en móvil */
+    .diagnostics-panel > div:not(:first-child) {
+        display: none !important;
+    }
+
+    .diagnostics-panel .section-tag {
+        display: none !important;
+    }
+
+    .pip-wrapper {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    #pip-camara {
+        width: 100% !important;
+        height: 100% !important;
+        border: 2px solid var(--cyan) !important;
+        box-shadow: var(--glow-cyan) !important;
+    }
+
+    #pip-camara::before {
+        font-size: 6px !important;
+        top: 4px !important;
+        left: 5px !important;
+    }
+}

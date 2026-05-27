@@ -1,0 +1,660 @@
+/* ==========================================================================
+   3. FASE 2 Y 3: CONSOLA HOLOGRÁFICA ULTRA-TRANSPARENTE (ESCRITORIO)
+   ========================================================================== */
+.console-container-wrapper {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+}
+
+.tactical-console {
+    width: 100vw;
+    height: 100vh;
+    background: var(--fondo-consola);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: grid;
+    grid-template-columns: 240px 1fr 280px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Esquinas HUD de Calibración */
+.console-corner {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-color: var(--cyan);
+    border-style: solid;
+    opacity: 0.65;
+    z-index: 100;
+    pointer-events: none;
+}
+.c-tl { top: 12px; left: 12px; border-width: 3px 0 0 3px; }
+.c-tr { top: 12px; right: 12px; border-width: 3px 3px 0 0; }
+.c-bl { bottom: 12px; left: 12px; border-width: 0 0 3px 3px; }
+.c-br { bottom: 12px; right: 12px; border-width: 0 3px 3px 0; }
+
+/* BARRA LATERAL IZQUIERDA: MENÚ DE COMANDO */
+.sidebar-nav {
+    background: rgba(3, 3, 10, 0.18);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 30px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.system-brand {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.system-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #fff;
+    text-shadow: var(--glow-cyan);
+}
+
+.system-logo .logo-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--cyan);
+    border-radius: 50%;
+    box-shadow: var(--glow-cyan);
+    animation: flashLed 1.5s ease-in-out infinite alternate;
+}
+
+.system-subtitle {
+    font-family: var(--font-display);
+    font-size: 8px;
+    letter-spacing: 3px;
+    color: var(--texto-dim);
+    margin-top: 4px;
+    text-transform: uppercase;
+}
+
+.nav-menu {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-grow: 1;
+}
+
+.nav-btn {
+    width: 100%;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--texto-dim);
+    font-family: var(--font-display);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: left;
+    padding: 14px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.25s ease;
+}
+
+.nav-btn:hover {
+    color: var(--texto);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.nav-btn.active {
+    color: var(--cyan);
+    background: rgba(0, 255, 204, 0.08);
+    border: 1px solid rgba(0, 255, 204, 0.35);
+    box-shadow: inset 0 0 10px rgba(0, 255, 204, 0.05);
+    text-shadow: var(--glow-cyan);
+}
+
+.reactor-widget {
+    background: rgba(12, 12, 32, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 6px;
+    padding: 14px;
+}
+
+.reactor-title {
+    font-family: var(--font-display);
+    font-size: 8px;
+    letter-spacing: 1px;
+    color: var(--texto-dim);
+    margin-bottom: 6px;
+}
+
+.reactor-bar {
+    height: 4px;
+    background: rgba(0, 102, 255, 0.15);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.reactor-fill {
+    height: 100%;
+    width: 85%;
+    background: linear-gradient(90deg, var(--azul), var(--cyan));
+    box-shadow: 0 0 8px var(--cyan);
+}
+
+.reactor-status {
+    font-family: var(--font-display);
+    font-size: 7.5px;
+    letter-spacing: 0.5px;
+    color: var(--cyan);
+    margin-top: 6px;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* ÁREA DE OPERACIONES CENTRAL */
+.operations-panel {
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+}
+
+.panel-title-container h2 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 1.35rem;
+    letter-spacing: 2px;
+    color: #fff;
+    text-shadow: var(--glow-cyan);
+}
+
+.panel-title-container p {
+    font-size: 11px;
+    color: var(--texto-dim);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.hud-time {
+    font-family: var(--font-display);
+    font-size: 11px;
+    color: var(--magenta);
+    background: rgba(255, 0, 255, 0.05);
+    border: 1px solid rgba(255, 0, 255, 0.15);
+    padding: 5px 12px;
+    border-radius: 3px;
+    letter-spacing: 1px;
+}
+
+.tab-content {
+    display: none;
+    flex-grow: 1;
+    height: calc(100% - 70px);
+    animation: tabFadeIn 0.3s ease forwards;
+}
+
+.tab-content.active {
+    display: flex;
+    flex-direction: column;
+}
+
+@keyframes tabFadeIn {
+    0% { opacity: 0; transform: translateY(6px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* CANVAS DE JUEGO TRANSPARENTE */
+.seccion-camara {
+    position: relative;
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(0, 255, 204, 0.25);
+    box-shadow: 0 0 35px rgba(0, 0, 0, 0.9);
+    background-color: rgba(2, 2, 6, 0.15);
+    backdrop-filter: blur(2px);
+}
+
+#lienzo-juego {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.seccion-camara::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    box-shadow: 0 0 10px var(--cyan);
+    opacity: 0.25;
+    pointer-events: none;
+    z-index: 8;
+    animation: hudScan 7s linear infinite;
+}
+
+@keyframes hudScan {
+    0% { top: 0%; }
+    100% { top: 100%; }
+}
+
+.console-footer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    flex-shrink: 0;
+}
+
+.footer-stat {
+    font-family: var(--font-display);
+    font-size: 9px;
+    letter-spacing: 0.8px;
+    color: var(--texto-dim);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.footer-stat .val {
+    color: var(--cyan);
+    font-weight: 700;
+}
+
+/* PESTAÑA 2: DIAGNÓSTICOS DE IA */
+.neural-diag-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    flex-grow: 1;
+}
+
+.diag-card {
+    background: var(--fondo-tarjeta);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.diag-card h3 {
+    font-family: var(--font-display);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--magenta);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+}
+
+.model-test-row {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex-grow: 1;
+    justify-content: center;
+}
+
+.test-meter {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.meter-label {
+    font-family: var(--font-display);
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--texto);
+    display: flex;
+    justify-content: space-between;
+}
+
+.meter-bar-container {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.meter-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--azul), var(--cyan));
+    box-shadow: 0 0 6px var(--cyan);
+    transition: width 0.1s ease;
+}
+
+.meter-bar-fill.magenta {
+    background: linear-gradient(90deg, #b000ff, var(--magenta));
+    box-shadow: 0 0 6px var(--magenta);
+}
+
+.voice-wave-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    height: 65px;
+    margin-top: 20px;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.wave-bar {
+    width: 4px;
+    height: 15px;
+    background: var(--cyan);
+    border-radius: 2px;
+    animation: voiceActive 1s ease-in-out infinite alternate;
+}
+.wave-bar:nth-child(2n) { background: var(--magenta); height: 28px; animation-delay: 0.15s; }
+.wave-bar:nth-child(3n) { background: var(--azul); height: 12px; animation-delay: 0.3s; }
+.wave-bar:nth-child(4n) { height: 42px; animation-delay: 0.45s; }
+
+@keyframes voiceActive {
+    0% { transform: scaleY(0.4); opacity: 0.4; }
+    100% { transform: scaleY(1.4); opacity: 1; }
+}
+
+/* PESTAÑA 3: LORE Y BIBLIOTECA */
+.database-layout {
+    display: grid;
+    grid-template-columns: 210px 1fr;
+    gap: 20px;
+    flex-grow: 1;
+}
+
+.database-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.db-item-btn {
+    width: 100%;
+    background: rgba(12, 12, 32, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    color: var(--texto-dim);
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 12px 14px;
+    border-radius: 4px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.db-item-btn:hover, .db-item-btn.active {
+    color: var(--cyan);
+    border-color: var(--cyan);
+    background: rgba(0, 255, 204, 0.06);
+    text-shadow: var(--glow-cyan);
+}
+
+.database-detail {
+    background: var(--fondo-tarjeta);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 15px;
+}
+
+.detail-header h3 {
+    font-family: var(--font-display);
+    color: #fff;
+    font-size: 1.25rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.detail-class {
+    font-family: var(--font-display);
+    font-size: 9px;
+    color: var(--magenta);
+    background: rgba(255, 0, 255, 0.08);
+    border: 1px solid rgba(255, 0, 255, 0.25);
+    padding: 4px 10px;
+    border-radius: 3px;
+}
+
+.detail-body {
+    font-size: 14.5px;
+    color: var(--texto);
+    line-height: 1.6;
+    margin: 20px 0;
+    flex-grow: 1;
+}
+
+.detail-specs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.spec-item {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-display);
+    font-size: 10px;
+    color: var(--texto-dim);
+}
+
+.spec-item span {
+    color: var(--cyan);
+    font-weight: 700;
+}
+
+/* PESTAÑA 4: LEADERBOARD */
+.leaderboard-table-container {
+    background: var(--fondo-tarjeta);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.leaderboard-table th {
+    background: rgba(12, 12, 32, 0.4);
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--magenta);
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    text-align: left;
+}
+
+.leaderboard-table td {
+    padding: 14px 20px;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.td-rank { font-family: var(--font-display); color: var(--cyan); font-weight: 900; }
+.td-player { font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
+.td-player .status-dot { width: 6px; height: 6px; background: var(--cyan); border-radius: 50%; }
+.td-score { font-family: var(--font-display); color: var(--cyan); font-weight: 700; }
+.td-accuracy { font-family: var(--font-display); color: var(--texto-dim); }
+
+/* BARRA LATERAL DERECHA: WEBCAM Y TELEMETRÍAS */
+.diagnostics-panel {
+    background: rgba(3, 3, 10, 0.18);
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 30px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.section-tag {
+    font-family: var(--font-display);
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: var(--magenta);
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(255, 0, 255, 0.15);
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+    text-shadow: var(--glow-magenta);
+}
+
+.pip-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+#pip-camara {
+    width: 100%;
+    height: 180px;
+    border: 2px solid var(--cyan);
+    box-shadow: var(--glow-cyan);
+    border-radius: 6px;
+    overflow: hidden;
+    background: #000;
+    position: relative;
+}
+
+#pip-camara::before {
+    content: '• TACTICAL CAM FEED';
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    font-family: var(--font-display);
+    font-size: 8px;
+    color: var(--cyan);
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-shadow: var(--glow-cyan);
+    z-index: 12;
+    animation: flashLed 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes flashLed {
+    0% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+
+#pip-camara canvas {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+}
+
+.mini-card {
+    background: rgba(12, 12, 32, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 6px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.mini-card-info h4 {
+    font-family: var(--font-display);
+    font-size: 8.5px;
+    letter-spacing: 1px;
+    color: var(--texto-dim);
+    text-transform: uppercase;
+}
+
+.mini-card-info p {
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--cyan);
+    text-shadow: var(--glow-cyan);
+    margin-top: 2px;
+}
+
+.status-led {
+    width: 8px;
+    height: 8px;
+    background: var(--rojo-neon);
+    border-radius: 50%;
+    box-shadow: 0 0 6px var(--rojo-neon);
+}
+.status-led.ready { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+.status-led.loading { background: var(--amarillo); box-shadow: 0 0 8px var(--amarillo); animation: flashLed 0.8s ease-in-out infinite alternate; }
+
+.telemetry-block {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.telemetry-row {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-display);
+    font-size: 9.5px;
+    letter-spacing: 0.8px;
+    color: var(--texto-dim);
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.03);
+    padding-bottom: 5px;
+}
+
+.telemetry-row .val { color: var(--cyan); font-weight: 700; }
+.telemetry-row .val.pink { color: var(--magenta); }

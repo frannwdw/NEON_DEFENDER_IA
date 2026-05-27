@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Defender IA — Tactical Command Console</title>
+
+    <!-- Meta etiquetas de optimización SEO -->
+    <meta name="description"
+        content="Controla este arcade espacial futurista usando tus gestos corporales y comandos de voz a través de Inteligencia Artificial neural en tiempo real con Teachable Machine.">
+    <meta name="keywords"
+        content="Teachable Machine, TensorFlow, IA, Videojuego IA, Reconocimiento de postura, Reconocimiento de voz, Realidad Aumentada">
+    <meta name="author" content="Antigravity Studio">
+
+    <link rel="icon" type="image/webp" href="icon.webp">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- Video de fondo premium (Cargado nativamente en PC y cancelado vía JS en móvil para ahorrar datos) -->
+    <video autoplay muted loop playsinline id="bg-video" src="fondo.mp4"></video>
+
+    <!-- Capas analógicas CRT de neón -->
+    <div class="bg-grid"></div>
+    <div class="bg-radial"></div>
+    <div class="scanlines"></div>
+
+    <!-- ==========================================
+         FASE 1: LANDING PAGE DE BIENVENIDA (PC / MÓVIL)
+         ========================================== -->
+    <div class="landing-container" id="landing-page">
+        <header class="landing-header">
+            <div class="landing-system-tag">Arcade Neural Interactivo</div>
+            <h1 class="landing-title">NEON <span>DEFENDER</span> IA</h1>
+            <p class="landing-slogan">Maniobra con tu cuerpo. Dispara con tu voz.</p>
+        </header>
+
+        <!-- Tarjetas de Características Técnicas -->
+        <section class="landing-features">
+            <div class="feature-card">
+                <span class="icon">🏃</span>
+                <h3>Reconocimiento de Postura</h3>
+                <p>La red neuronal estima tu pose física. Inclínate lateralmente para maniobrar la nave de forma fluida.
+                </p>
+            </div>
+            <div class="feature-card">
+                <span class="icon">🎤</span>
+                <h3>Disparo Táctico Acústico</h3>
+                <p>Grita "¡PUM PUM!" consecutivamente para disparar ráfagas continuas de láser magenta.</p>
+            </div>
+            <div class="feature-card">
+                <span class="icon">🛡️</span>
+                <h3>Campo de Fuerza Cian</h3>
+                <p>Activa el escudo cyberpunk presionando Shift, la tecla 'S' o diciendo "escudo" al micrófono.</p>
+            </div>
+        </section>
+
+        <!-- Botón de Conexión del Sistema -->
+        <button class="btn-launch-console" id="btn-ingresar" type="button">
+            <span>Iniciar Conexión Neural</span>
+        </button>
+    </div>
+
+    <!-- ==========================================
+         FASE 2 Y 3: CONSOLA DE COMANDO NEURAL (ESCRITORIO MULTI-TAB / MÓVIL FULLSCREEN)
+         ========================================== -->
+    <div class="console-container-wrapper" id="console-container" style="display: none;">
+        <div class="tactical-console" id="main-console">
+
+            <!-- Esquinas HUD de calibración táctica -->
+            <div class="console-corner c-tl"></div>
+            <div class="console-corner c-tr"></div>
+            <div class="console-corner c-bl"></div>
+            <div class="console-corner c-br"></div>
+
+            <!-- BARRA LATERAL IZQUIERDA: MENÚ DE COMANDO (Se oculta en móvil) -->
+            <aside class="sidebar-nav">
+                <div class="system-brand">
+                    <div class="system-logo">
+                        <div class="logo-dot"></div>
+                        <span>NEON DEFENDER</span>
+                    </div>
+                    <div class="system-subtitle">Tactical Neural Console</div>
+                </div>
+
+                <!-- Menú de navegación táctica -->
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <button class="nav-btn active" id="btn-tab-combat" data-tab="tab-combat">
+                            <span class="icon">🚀</span> [01] Combat Mission
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-btn" id="btn-tab-diag" data-tab="tab-diag">
+                            <span class="icon">🧠</span> [02] AI Diagnostics
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-btn" id="btn-tab-archives" data-tab="tab-archives">
+                            <span class="icon">📂</span> [03] Archives & Lore
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-btn" id="btn-tab-leaderboard" data-tab="tab-leaderboard">
+                            <span class="icon">🏆</span> [04] Leaderboard
+                        </button>
+                    </li>
+                </ul>
+
+                <!-- Reactor del núcleo de energía -->
+                <div class="reactor-widget">
+                    <div class="reactor-title">REACTOR CORE POWER</div>
+                    <div class="reactor-bar">
+                        <div class="reactor-fill"></div>
+                    </div>
+                    <div class="reactor-status">
+                        <span>TEMP: 34.2°C</span>
+                        <span style="color: var(--cyan);">ACTIVE (85%)</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- ÁREA CENTRAL DE OPERACIONES -->
+            <main class="operations-panel">
+
+                <!-- PESTAÑA 1: COMBAT MISSION (El lienzo de juego) -->
+                <section class="tab-content active" id="tab-combat">
+                    <header class="panel-header">
+                        <div class="panel-title-container">
+                            <h2>TACTICAL COMMAND</h2>
+                            <p style="color: var(--cyan); font-weight: bold; font-size: 11px; letter-spacing: 1px;">🏃
+                                INCLÍNATE PARA VOLAR · 💥 DI PUM PARA FUEGO CONTINUO</p>
+                        </div>
+                        <div class="hud-time" id="hud-timer">SYS_TIME: OK</div>
+                    </header>
+
+                    <div class="seccion-camara">
+                        <canvas id="lienzo-juego" width="640" height="360"></canvas>
+                    </div>
+
+                    <!-- Pie informativo de controles -->
+                    <div class="console-footer">
+                        <div class="footer-stat">
+                            <span>SISTEMA DE CONTROL</span>
+                            <span class="val">[POSTURA NEURAL]</span>
+                        </div>
+                        <div class="footer-stat" style="text-align: center;">
+                            <span>DISPARO SÓNICO</span>
+                            <span class="val" style="color: var(--magenta);">[DI "PUM PUM" (CONTINUO)]</span>
+                        </div>
+                        <div class="footer-stat" style="text-align: right;">
+                            <span>ESCUDO PROTECTOR</span>
+                            <span class="val" style="color: var(--cyan);">[TECLA S / SHIFT]</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PESTAÑA 2: DIAGNÓSTICOS DE IA (Estadísticas y Osciloscopio) -->
+                <section class="tab-content" id="tab-diag">
+                    <header class="panel-header">
+                        <div class="panel-title-container">
+                            <h2>AI NEURAL DIAGNOSTICS</h2>
+                            <p>Real-Time Neural Networks Analysis</p>
+                        </div>
+                        <div class="hud-time" style="color: var(--cyan); border-color: var(--cyan);">MODEL: TM_V9</div>
+                    </header>
+
+                    <div class="neural-diag-grid">
+                        <div class="diag-card">
+                            <h3>🏃 Neural Posture Detection</h3>
+                            <div class="model-test-row">
+                                <div class="test-meter">
+                                    <div class="meter-label"><span>IZQUIERDA (TILT LEFT)</span><span
+                                            id="label-tilt-left">0%</span></div>
+                                    <div class="meter-bar-container">
+                                        <div class="meter-bar-fill" id="bar-tilt-left" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                <div class="test-meter">
+                                    <div class="meter-label"><span>CENTRO (CENTER)</span><span
+                                            id="label-tilt-center">100%</span></div>
+                                    <div class="meter-bar-container">
+                                        <div class="meter-bar-fill" id="bar-tilt-center" style="width: 100%"></div>
+                                    </div>
+                                </div>
+                                <div class="test-meter">
+                                    <div class="meter-label"><span>DERECHA (TILT RIGHT)</span><span
+                                            id="label-tilt-right">0%</span></div>
+                                    <div class="meter-bar-container">
+                                        <div class="meter-bar-fill" id="bar-tilt-right" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="diag-card">
+                            <h3>🎤 Vocal FFT Amplitude</h3>
+                            <div class="model-test-row">
+                                <div class="test-meter">
+                                    <div class="meter-label"><span>DISPARO (PUM) SIGNAL</span><span
+                                            id="label-audio-shot">0%</span></div>
+                                    <div class="meter-bar-container">
+                                        <div class="meter-bar-fill magenta" id="bar-audio-shot" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                <div class="test-meter">
+                                    <div class="meter-label"><span>RUIDO AMBIENTE (NOISE)</span><span
+                                            id="label-audio-noise">100%</span></div>
+                                    <div class="meter-bar-container">
+                                        <div class="meter-bar-fill" id="bar-audio-noise"
+                                            style="width: 100%; background: var(--texto-dim);"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="voice-wave-container">
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PESTAÑA 3: BASE DE DATOS DE NAVES (LORE) -->
+                <section class="tab-content" id="tab-archives">
+                    <header class="panel-header">
+                        <div class="panel-title-container">
+                            <h2>ARCHIVES & SPACE LORE</h2>
+                            <p>Threat Database & Defensive Ship Specifications</p>
+                        </div>
+                    </header>
+
+                    <div class="database-layout">
+                        <ul class="database-list">
+                            <li><button class="db-item-btn active" data-ship="ship-defender">🚀 Neon Defender</button>
+                            </li>
+                            <li><button class="db-item-btn" data-ship="ship-invader">🛸 Hex Invader</button></li>
+                            <li><button class="db-item-btn" data-ship="ship-shield">🛡️ Force Shield</button></li>
+                        </ul>
+                        <div class="database-detail">
+                            <div class="detail-header">
+                                <div>
+                                    <h3 id="db-detail-title">Neon Defender</h3>
+                                    <p id="db-detail-sub"
+                                        style="font-size: 10px; color: var(--texto-dim); text-transform: uppercase;">
+                                        Nave de Combate Clase Alfa</p>
+                                </div>
+                                <span class="detail-class" id="db-detail-class">Clase A</span>
+                            </div>
+                            <div class="detail-body" id="db-detail-desc">
+                                El caza estelar experimental Neon Defender está diseñado con un núcleo de reactor de
+                                plasma cian líquido. Su casco ligero y alas variables de neón le permiten maniobrar
+                                lateralmente a través de corrientes de gravedad hiperbólica usando un mapeador de redes
+                                neuronales biológicas.
+                            </div>
+                            <div class="detail-specs">
+                                <div class="spec-item">Velocidad: <span id="db-spec-speed">MACH 28.5</span></div>
+                                <div class="spec-item">Escudo: <span id="db-spec-shield">Activo 100%</span></div>
+                                <div class="spec-item">Arma: <span id="db-spec-weapon">Láser Magenta v2</span></div>
+                                <div class="spec-item">Motor: <span id="db-spec-engine">Cosmic Flamer</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PESTAÑA 4: LEADERBOARD -->
+                <section class="tab-content" id="tab-leaderboard">
+                    <header class="panel-header">
+                        <div class="panel-title-container">
+                            <h2>OPERATIVES RECORD</h2>
+                            <p>Global Scores in Sector Cyan-09</p>
+                        </div>
+                    </header>
+
+                    <div class="leaderboard-table-container">
+                        <table class="leaderboard-table">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Operador</th>
+                                    <th>Puntuación</th>
+                                    <th>Precisión IA</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="td-rank">#01</td>
+                                    <td class="td-player">
+                                        <div class="status-dot"></div> NEON_RIDER_77
+                                    </td>
+                                    <td class="td-score">3,240 pts</td>
+                                    <td class="td-accuracy">96.8%</td>
+                                </tr>
+                                <tr>
+                                    <td class="td-rank">#02</td>
+                                    <td class="td-player">
+                                        <div class="status-dot"></div> ALPHA_SHADOW
+                                    </td>
+                                    <td class="td-score">2,850 pts</td>
+                                    <td class="td-accuracy">94.2%</td>
+                                </tr>
+                                <tr id="row-current-player" style="background: rgba(0, 255, 204, 0.05);">
+                                    <td class="td-rank" style="color: var(--cyan);">#03</td>
+                                    <td class="td-player" style="color: var(--cyan);">
+                                        <div class="status-dot" style="background: var(--cyan);"></div> OPERADOR_ACTUAL
+                                        (TÚ)
+                                    </td>
+                                    <td class="td-score" id="leaderboard-current-score" style="color: var(--cyan);">
+                                        000,000 pts</td>
+                                    <td class="td-accuracy" style="color: var(--cyan);">98.1%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+
+            <!-- BARRA LATERAL DERECHA: TELEMETRÍA Y WEBCAM (Se oculta y adapta en móvil) -->
+            <aside class="diagnostics-panel">
+                <div>
+                    <div class="section-tag">📡 Mini Cam View</div>
+                    <div class="pip-wrapper">
+                        <div id="pip-camara"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="section-tag">🧠 AI Status Led</div>
+                    <div class="mini-card" id="estado-postura">
+                        <div class="mini-card-info">
+                            <h4>🏃 Postura IA</h4>
+                            <p class="prediccion">Desconectado</p>
+                        </div>
+                        <div class="status-led" id="led-postura"></div>
+                    </div>
+
+                    <div class="mini-card" id="estado-voz">
+                        <div class="mini-card-info">
+                            <h4>🎤 Audio IA</h4>
+                            <p class="prediccion">Desconectado</p>
+                        </div>
+                        <div class="status-led" id="led-voz"></div>
+                    </div>
+
+                    <div class="mini-card" id="estado-vision">
+                        <div class="mini-card-info">
+                            <h4>🎮 Engine</h4>
+                            <p class="prediccion">En Espera</p>
+                        </div>
+                        <div class="status-led" id="led-vision"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="section-tag">📊 Telemetry</div>
+                    <div class="telemetry-block">
+                        <div class="telemetry-row">
+                            <span>LATENCY</span>
+                            <span class="val" id="telemetry-latency">-- ms</span>
+                        </div>
+                        <div class="telemetry-row">
+                            <span>SAMPLING</span>
+                            <span class="val">44.1 kHz</span>
+                        </div>
+                        <div class="telemetry-row">
+                            <span>TENSORFLOW</span>
+                            <span class="val pink">WebGL GPU</span>
+                        </div>
+                        <div class="telemetry-row">
+                            <span>SYS_FPS</span>
+                            <span class="val" id="telemetry-fps">60.0 FPS</span>
+                        </div>
+                        <div class="telemetry-row">
+                            <span>AI_VECTOR</span>
+                            <span class="val" id="telemetry-vector">0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Librerías de Google y Tensorflow -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/pose@0.8/dist/teachablemachine-pose.min.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands@0.4.0/dist/speech-commands.min.js"></script>
+
+    <!-- Scripts Relativos de Control e IA -->
+    <script src="js/game.js?v=9"></script>
+    <script src="js/main.js?v=9"></script>
+</body>
+
+</html>
