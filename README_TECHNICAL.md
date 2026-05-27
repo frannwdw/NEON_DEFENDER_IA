@@ -14,8 +14,11 @@ Para mantener el principio de responsabilidad única (Single Responsibility Prin
    * **`css/auth.css` (Fase 1.5 - Calibración Biométrica):** Estilos dedicados del escáner facial biométrico, óvalo de mira interactivo, láser magenta y barra de progreso.
    * **`css/console.css` (Fase 2 y 3 - Cabina PC):** Estilos del panel de mandos en computadoras: la cuadrícula táctica, barras de navegación, osciloscopios de IA, visores de telemetría y el contenedor de cámara.
    * **`css/mobile.css` (Optimización Celular):** Reglas responsivas que desactivan videos de 84MB en dispositivos móviles, ocultan sidebars innecesarios y forzan el fondo negro sólido `#000000`.
-3. **`js/main.js` (Cerebro IA / TensorFlow):** Se encarga de cargar los modelos entrenados de Google, capturar la cámara web y el micrófono, ejecutar el reconocimiento corporal/acústico asíncronamente y dibujar el esqueleto holográfico.
-4. **`js/game.js` (Motor Gráfico y Físicas):** Controla el comportamiento mecánico del videojuego (movimiento suave de la nave, generación de asteroides hostiles, colisiones, el escudo cian, las partículas de propulsión y el puntaje).
+3. **`js/` (Programación Lógica Modularizada):** Para facilitar el desacoplamiento de capas lógicas, el núcleo de scripting se divide en módulos:
+   * **`js/main.js` (Orquestador Neural):** El núcleo del sistema de Inteligencia Artificial. Gestiona el bucle asíncrono corporal PoseNet a 25 FPS y la sincronización de refresco del canvas principal a 60 FPS.
+   * **`js/ui.js` (Interfaz y Telemetría):** Controlador de los menús de navegación por pestañas de la cabina, sincronización del reloj HUD y osciloscopio de FPS en tiempo real.
+   * **`js/auth.js` (Calibrador Biométrico):** Gestiona el inicio de sesión holográfico con actualización de cámara a 60 FPS por requestAnimationFrame y la precarga en segundo plano de modelos TensorFlow.
+   * **`js/game.js` (Motor Gráfico y Físicas):** Controla el comportamiento mecánico del arcade (movimiento por interpolación LERP de la nave, generación de Hex Invaders, colisiones elásticas, escudo de fuerza y partículas).
 
 ---
 

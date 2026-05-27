@@ -19,9 +19,11 @@ Para que el proyecto sea limpio y profesional, no pusimos todo en un solo archiv
   * **`auth.css`:** El diseño futurista del escáner biométrico facial para el inicio de sesión.
   * **`console.css`:** El diseño de la cabina espacial en PC (menús, pestañas, ranking).
   * **`mobile.css`:** El diseño especial para celulares (apaga el video pesado y pone la pantalla negra).
-* 📁 **`js/` (Los músculos y el cerebro):**
-  * **`js/main.js` (El Cerebro IA):** Carga los modelos neuronales de Google, captura la cámara web/micrófono y dibuja tu esqueleto de neón en pantalla.
-  * **`js/game.js` (Los Músculos del Juego):** Controla el movimiento de la nave, genera los asteroides hostiles, las colisiones, el escudo cian y las explosiones.
+* 📁 **`js/` (El cerebro, músculos y comportamiento modular):**
+  * **`js/main.js` (El Cerebro Neural Principal):** El núcleo de Inteligencia Artificial. Ejecuta la estimación corporal asíncrona de PoseNet y el bucle principal a 60 FPS.
+  * **`js/ui.js` (Menús y Datos):** Gestiona la navegación por pestañas de la cabina, base de datos de Lore de naves y la telemetría de los FPS reales.
+  * **`js/auth.js` (El Escáner Biométrico):** Controla el inicio de sesión holográfico de película por cámara a 60 FPS y la descarga paralela asíncrona de modelos TensorFlow.
+  * **`js/game.js` (Las Físicas del Arcade):** Los músculos del juego. Controla la nave, asteroides, inercia de movimiento, explosiones y propulsión.
 
 ---
 
