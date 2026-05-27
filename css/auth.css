@@ -1,0 +1,215 @@
+/* ==========================================================================
+   AUTHENTICATION & BIOMETRIC SCANNER SYSTEM (CYBER SCAN MASK)
+   ========================================================================== */
+
+.auth-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 20;
+    padding: 20px;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 0, 85, 0.04) 0%, transparent 70%);
+}
+
+.auth-card {
+    background: var(--fondo-consola);
+    border: 1px solid var(--borde-trans);
+    border-radius: 12px;
+    padding: 30px 40px;
+    width: 100%;
+    max-width: 460px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 255, 204, 0.05);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* HUD corners inside the scanning card */
+.auth-card::before, .auth-card::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-color: var(--cyan);
+    border-style: solid;
+    opacity: 0.55;
+    pointer-events: none;
+}
+.auth-card::before { top: 15px; left: 15px; border-width: 2px 0 0 2px; }
+.auth-card::after { bottom: 15px; right: 15px; border-width: 0 2px 2px 0; }
+
+.auth-title {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 900;
+    color: var(--cyan);
+    letter-spacing: 3px;
+    text-shadow: var(--glow-cyan);
+    text-transform: uppercase;
+}
+
+.auth-subtitle {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--texto-dim);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 5px;
+    margin-bottom: 25px;
+}
+
+/* SCANNER VIEWPORT AREA */
+.scanner-viewport {
+    width: 280px;
+    height: 280px;
+    margin: 0 auto 25px;
+    border: 2px dashed rgba(255, 0, 255, 0.3);
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    background: #000;
+    box-shadow: 0 0 30px rgba(255, 0, 255, 0.15), inset 0 0 15px rgba(0, 0, 0, 0.9);
+}
+
+.scanner-webcam-placeholder {
+    width: 100%;
+    height: 100%;
+    transform: scaleX(-1); /* Mirror view for natural interaction */
+}
+
+.scanner-webcam-placeholder canvas {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+}
+
+/* CYBER BIOMETRIC FACE MASK OVERLAY */
+.face-mask-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Glowing green face oval */
+.face-oval {
+    width: 150px;
+    height: 200px;
+    border: 1.5px solid var(--cyan);
+    border-radius: 50% / 50%;
+    box-shadow: var(--glow-cyan), inset var(--glow-cyan);
+    opacity: 0.65;
+    animation: authPulse 1.8s ease-in-out infinite alternate;
+    position: relative;
+}
+
+/* Biometric target crosshairs inside face-oval */
+.face-oval::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -15px;
+    right: -15px;
+    height: 1px;
+    background: rgba(0, 255, 204, 0.3);
+}
+
+.face-oval::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: -15px;
+    bottom: -15px;
+    width: 1px;
+    background: rgba(0, 255, 204, 0.3);
+}
+
+@keyframes authPulse {
+    0% { transform: scale(0.97); opacity: 0.45; border-color: var(--cyan); box-shadow: var(--glow-cyan); }
+    100% { transform: scale(1.03); opacity: 0.85; border-color: #fff; box-shadow: 0 0 15px var(--cyan); }
+}
+
+/* Holographic pink scanning laser line */
+.scan-bar {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--magenta), #fff, var(--magenta), transparent);
+    box-shadow: 0 0 15px var(--magenta), 0 0 5px #fff;
+    opacity: 0.85;
+    z-index: 12;
+    animation: authScanLine 3.2s linear infinite;
+}
+
+@keyframes authScanLine {
+    0% { top: 0%; }
+    50% { top: 100%; }
+    100% { top: 0%; }
+}
+
+/* PROGRESS BAR AND LOG */
+.auth-status-container {
+    width: 100%;
+}
+
+.auth-progress-bar {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.auth-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--magenta), var(--cyan));
+    box-shadow: 0 0 8px var(--cyan);
+    transition: width 0.1s linear;
+}
+
+.auth-log {
+    font-family: var(--font-display);
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--texto);
+    height: 12px;
+    text-transform: uppercase;
+    animation: blinkText 0.3s steps(2, start) infinite alternate;
+}
+
+@keyframes blinkText {
+    0% { opacity: 0.85; }
+    100% { opacity: 1; }
+}
+
+/* MOBILE ADAPTABILITY FOR SCANNER */
+@media (max-width: 768px) {
+    .auth-card {
+        padding: 20px 24px;
+        max-width: 320px;
+    }
+    
+    .scanner-viewport {
+        width: 220px;
+        height: 220px;
+        margin-bottom: 18px;
+    }
+    
+    .face-oval {
+        width: 120px;
+        height: 160px;
+    }
+}

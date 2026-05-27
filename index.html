@@ -64,6 +64,32 @@
     </div>
 
     <!-- ==========================================
+         FASE 1.5: PANTALLA DE AUTENTICACIÓN BIOMÉTRICA (ESCÁNER FACIAL SIMULADO)
+         ========================================== -->
+    <div class="auth-container" id="auth-screen" style="display: none;">
+        <div class="auth-card">
+            <div class="auth-title">Neural Interface Calibration</div>
+            <div class="auth-subtitle">Biometric Facial Scan Required</div>
+            
+            <div class="scanner-viewport">
+                <div class="scanner-webcam-placeholder" id="auth-webcam-container"></div>
+                <!-- Cyber Biometric Face Mask -->
+                <div class="face-mask-overlay">
+                    <div class="face-oval"></div>
+                    <div class="scan-bar"></div>
+                </div>
+            </div>
+            
+            <div class="auth-status-container">
+                <div class="auth-progress-bar">
+                    <div class="auth-progress-fill" id="auth-progress"></div>
+                </div>
+                <div class="auth-log" id="auth-log-text">Initializing Biometric Signature...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
          FASE 2 Y 3: CONSOLA DE COMANDO NEURAL (ESCRITORIO MULTI-TAB / MÓVIL FULLSCREEN)
          ========================================== -->
     <div class="console-container-wrapper" id="console-container" style="display: none;">
