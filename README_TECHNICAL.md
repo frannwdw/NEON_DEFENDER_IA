@@ -11,6 +11,7 @@ Para mantener el principio de responsabilidad única (Single Responsibility Prin
    * **`css/style.css` (Punto de Entrada):** El archivo principal de estilo que enlaza y unifica los módulos mediante `@import`.
    * **`css/variables.css` (Fondo, Reset e Identidad):** Contiene las variables del tema de color, fuentes, efectos de brillo de neón, restablecimiento base del navegador, la animación de la rejilla CRT y las propiedades del video de fondo.
    * **`css/landing.css` (Fase 1 - Bienvenida):** Estilos dedicados de la pantalla inicial de bienvenida, tarjetas de características y el botón de conexión neural.
+   * **`css/auth.css` (Fase 1.5 - Calibración Biométrica):** Estilos dedicados del escáner facial biométrico, óvalo de mira interactivo, láser magenta y barra de progreso.
    * **`css/console.css` (Fase 2 y 3 - Cabina PC):** Estilos del panel de mandos en computadoras: la cuadrícula táctica, barras de navegación, osciloscopios de IA, visores de telemetría y el contenedor de cámara.
    * **`css/mobile.css` (Optimización Celular):** Reglas responsivas que desactivan videos de 84MB en dispositivos móviles, ocultan sidebars innecesarios y forzan el fondo negro sólido `#000000`.
 3. **`js/main.js` (Cerebro IA / TensorFlow):** Se encarga de cargar los modelos entrenados de Google, capturar la cámara web y el micrófono, ejecutar el reconocimiento corporal/acústico asíncronamente y dibujar el esqueleto holográfico.
@@ -42,6 +43,11 @@ El micrófono captura el audio continuo en crudo y lo pasa al modelo de comandos
 Para el formato móvil, se configuró un bypass de carga en Javascript y reglas de renderizado en CSS:
 * **JS Media Bypass:** En celulares, el script detecta las cabeceras móviles e inmediatamente detiene (`.pause()`), limpia (`.src = ""`), recarga (`.load()`) y remueve del DOM el elemento de video pesado de fondo, cortando de raíz la descarga de **84MB** de datos de red.
 * **CSS Viewport Reset:** A través de media queries (`@media (max-width: 768px)`), el CSS oculta las barras laterales de la cabina y reescribe el layout de la pestaña de combate para usar `display: block !important`, forzando al canvas a ocupar la pantalla completa manteniendo un aspect-ratio de `16/9` e inyectando un fondo `#000000` puro para ahorrar batería y aumentar contraste.
+
+### 5. Calibración Biométrica y Preloader Concurrente (Patrón UX Oculto)
+Para mitigar el impacto de la latencia en la carga inicial de los modelos de TensorFlow.js (~3-4 segundos de inicialización asíncrona), se desarrolló un patrón de diseño interactivo de precarga:
+* **Autenticación Biométrica Simulada:** Al dispararse el evento del botón de ingreso, se inicializa de inmediato la captura multimedia (`tmPose.Webcam`) en un viewport circular de `280px` x `280px`. En paralelo, se dibuja un óvalo de vector calibrado y una línea de barrido magenta que emula un escáner facial por cámara.
+* **Preloader de Modelos en Segundo Plano:** Mientras el escáner realiza la animación y progresa del 0% al 100%, el motor realiza concurrentemente las peticiones HTTPS y la compilación WebGL de los modelos PoseNet y Speech de Teachable Machine. Esto oculta de manera elegante el tiempo de espera técnico del usuario bajo una experiencia inmersiva e interactiva de ciencia ficción.
 
 ---
 

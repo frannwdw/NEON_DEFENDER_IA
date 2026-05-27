@@ -16,6 +16,7 @@ Para que el proyecto sea limpio y profesional, no pusimos todo en un solo archiv
   * **`style.css` (El organizador):** Simplemente junta todos los archivos de diseño usando `@import`.
   * **`variables.css`:** Los colores de neón (cian, magenta), letras y video de fondo.
   * **`landing.css`:** El diseño de la pantalla de bienvenida y el gran botón de inicio.
+  * **`auth.css`:** El diseño futurista del escáner biométrico facial para el inicio de sesión.
   * **`console.css`:** El diseño de la cabina espacial en PC (menús, pestañas, ranking).
   * **`mobile.css`:** El diseño especial para celulares (apaga el video pesado y pone la pantalla negra).
 * 📁 **`js/` (Los músculos y el cerebro):**
@@ -43,6 +44,10 @@ Para que el proyecto sea limpio y profesional, no pusimos todo en un solo archiv
 ### 4. El "Bypass" de Video en Celular (Ahorrar datos como Netflix)
 * **La analogía del Ahorro de Datos:** El hermoso video del astronauta flotando de fondo pesa bastantes megabytes. En una PC con internet fijo es genial. Pero en un celular, intentar descargar ese video usando tus datos móviles mientras procesas la cámara y el juego haría que tu teléfono arda en llamas y te consumas tus megas.
 * Por eso, el código tiene una puerta de seguridad inteligente: si detecta que estás jugando desde un celular, **destruye el video por completo antes de que empiece a descargarse** y pinta la pantalla de negro sólido. ¡Es como cuando Netflix te baja la resolución para que no gastes tus megabytes!
+
+### 5. El Escaneo Biométrico (El Inicio de Sesión de Película)
+* **La analogía del Escáner de Misión Imposible:** En lugar de poner un aburrido formulario con usuario y contraseña, ¡hemos creado un escaneo de rostro futurista! Cuando das clic al botón, se enciende tu cámara y una mira láser cian y magenta analiza tu cara en tiempo real. 
+* Este escaneo no solo se ve increíble, sino que tiene un secreto: **oculta el tiempo de descarga de la Inteligencia Artificial**. Mientras tú ves cómo se carga la barra al 100% y aparecen logs de seguridad simulados, en segundo plano TensorFlow está descargando y conectando las redes neuronales. Así, cuando el escaneo termina, ¡el juego ya está listo para despegar sin que hayas tenido ninguna espera aburrida!
 
 ---
 
