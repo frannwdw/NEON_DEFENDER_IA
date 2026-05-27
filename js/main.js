@@ -151,10 +151,22 @@ async function bucleIA() {
                 // Control de precisión continuo por la nariz (Bypassea el snapping rígido)
                 const nose = pose.keypoints.find(k => k.part === "nose");
                 if (nose && nose.score >= 0.40) {
+                    const camWidth = (camaraWeb && camaraWeb.canvas) ? camaraWeb.canvas.width : 280;
                     const camX = nose.position.x;
-                    // Calibración elástica y ultra-sensible (Rango 220px a 420px de la cámara)
-                    let fraccion = (camX - 220) / (420 - 220);
+                    
+                    // Calibración elástica dinámica basada en el ancho de la cámara.
+                    // Usamos un margen del 20% a cada extremo para mayor sensibilidad de giro sin salirse.
+                    const margen = camWidth * 0.20;
+                    const minX = margen;
+                    const maxX = camWidth - margen;
+                    
+                    let fraccion = (camX - minX) / (maxX - minX);
                     fraccion = Math.max(0, Math.min(1, fraccion));
+                    
+                    // NOTA: Con la cámara en espejo (flip = true), inclinarse físicamente a la derecha
+                    // mueve la cabeza hacia la derecha de la imagen de la cámara (mayor X).
+                    // Para que la nave también vuele a la derecha (mayor X del canvas), la relación
+                    // debe ser directa. ¡Eliminamos la inversión errónea de espejo!
                     
                     if (typeof jugador !== 'undefined') {
                         // El avión se desplaza fluidamente entre X = 60 y X = 580 en el canvas
@@ -203,6 +215,14 @@ function dibujarEsqueletoHolografico(ctx, keypoints, minConfidence = 0.40) {
     // Buscar la nariz para dibujar el puntito táctico de precisión
     const nose = keypoints.find(k => k.part === "nose");
     if (nose && nose.score >= minConfidence) {
+        // Usamos la misma coordenada X corregida que la nave para alinear el espejo
+        const camWidth = (typeof camaraWeb !== 'undefined' && camaraWeb && camaraWeb.canvas) ? camaraWeb.canvas.width : 280;
+        const drawX = typeof jugador !== 'undefined' ? jugador.carrilObjetivo : (nose.position.x * 640 / camWidth);
+        
+        // Mapeamos el eje Y de la cámara al canvas de forma proporcional
+        const camHeight = (typeof camaraWeb !== 'undefined' && camaraWeb && camaraWeb.canvas) ? camaraWeb.canvas.height : 280;
+        const drawY = nose.position.y * 360 / camHeight;
+
         // Círculo exterior táctico (neón cian)
         ctx.shadowBlur = 10;
         ctx.shadowColor = "var(--cyan)";
@@ -211,7 +231,7 @@ function dibujarEsqueletoHolografico(ctx, keypoints, minConfidence = 0.40) {
         ctx.lineWidth = 1.8;
         
         ctx.beginPath();
-        ctx.arc(nose.position.x, nose.position.y, 8, 0, Math.PI * 2);
+        ctx.arc(drawX, drawY, 8, 0, Math.PI * 2);
         ctx.stroke();
         ctx.fill();
 
@@ -219,7 +239,7 @@ function dibujarEsqueletoHolografico(ctx, keypoints, minConfidence = 0.40) {
         ctx.shadowBlur = 0;
         ctx.fillStyle = "#ffffff";
         ctx.beginPath();
-        ctx.arc(nose.position.x, nose.position.y, 2, 0, Math.PI * 2);
+        ctx.arc(drawX, drawY, 2, 0, Math.PI * 2);
         ctx.fill();
     }
 
