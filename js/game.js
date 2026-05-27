@@ -575,13 +575,8 @@ function actualizarYDibujarJuego(ctx, postura, disparoSonido, activarEscudo) {
     ctx.setLineDash([]);
 
     // --- E: FÍSICAS DE MOVIMIENTO SUAVE DEL JUGADOR (LERP) ---
-    if (postura === "Izquierda") {
-        jugador.carrilObjetivo = 140;
-    } else if (postura === "Derecha") {
-        jugador.carrilObjetivo = 500;
-    } else if (postura === "Centro") {
-        jugador.carrilObjetivo = 320;
-    }
+    // carrilObjetivo ahora es calculado continuamente por la nariz en main.js, 
+    // lo que da una precisión milimétrica instantánea y sin fricción de carriles rígidos.
 
     // Almacenar coordenada anterior para estimar la inercia del movimiento
     const anteriorX = jugador.x;

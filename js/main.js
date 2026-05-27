@@ -148,6 +148,20 @@ async function bucleIA() {
                 posturaActual = ganadora;
                 ultimaPoseDetectada = pose;
 
+                // Control de precisión continuo por la nariz (Bypassea el snapping rígido)
+                const nose = pose.keypoints.find(k => k.part === "nose");
+                if (nose && nose.score >= 0.40) {
+                    const camX = nose.position.x;
+                    // Calibración elástica y ultra-sensible (Rango 220px a 420px de la cámara)
+                    let fraccion = (camX - 220) / (420 - 220);
+                    fraccion = Math.max(0, Math.min(1, fraccion));
+                    
+                    if (typeof jugador !== 'undefined') {
+                        // El avión se desplaza fluidamente entre X = 60 y X = 580 en el canvas
+                        jugador.carrilObjetivo = 60 + fraccion * (580 - 60);
+                    }
+                }
+
                 if (textoEstadoPostura) textoEstadoPostura.innerText = `${ganadora.toUpperCase()} (${Math.round(maxP * 100)}%)`;
 
                 if (barTiltLeft) {
@@ -181,64 +195,33 @@ async function bucleIA() {
 }
 
 /**
- * Dibuja las articulaciones como hermosas burbujas de neón flotantes
+ * Dibuja un puntero holográfico de precisión (un solo puntito brillante) en la nariz del jugador
  */
 function dibujarEsqueletoHolografico(ctx, keypoints, minConfidence = 0.40) {
     ctx.save();
     
-    const conexiones = [
-        ["leftShoulder", "rightShoulder"],
-        ["leftShoulder", "leftElbow"],
-        ["leftElbow", "leftWrist"],
-        ["rightShoulder", "rightElbow"],
-        ["rightElbow", "rightWrist"],
-        ["leftShoulder", "leftHip"],
-        ["rightShoulder", "rightHip"],
-        ["leftHip", "rightHip"]
-    ];
-
-    ctx.lineWidth = 1.8;
-    ctx.shadowBlur = 8;
-    ctx.shadowColor = "rgba(255, 0, 255, 0.5)";
-    ctx.strokeStyle = "rgba(255, 0, 255, 0.22)";
-    
-    conexiones.forEach(([p1, p2]) => {
-        const pt1 = keypoints.find(k => k.part === p1);
-        const pt2 = keypoints.find(k => k.part === p2);
+    // Buscar la nariz para dibujar el puntito táctico de precisión
+    const nose = keypoints.find(k => k.part === "nose");
+    if (nose && nose.score >= minConfidence) {
+        // Círculo exterior táctico (neón cian)
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = "var(--cyan)";
+        ctx.strokeStyle = "var(--cyan)";
+        ctx.fillStyle = "rgba(0, 255, 204, 0.18)";
+        ctx.lineWidth = 1.8;
         
-        if (pt1 && pt2 && pt1.score >= minConfidence && pt2.score >= minConfidence) {
-            ctx.beginPath();
-            ctx.moveTo(pt1.position.x, pt1.position.y);
-            ctx.lineTo(pt2.position.x, pt2.position.y);
-            ctx.stroke();
-        }
-    });
+        ctx.beginPath();
+        ctx.arc(nose.position.x, nose.position.y, 8, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.fill();
 
-    ctx.shadowColor = "rgba(0, 255, 204, 0.8)";
-    ctx.strokeStyle = "rgba(0, 255, 204, 0.8)";
-    ctx.lineWidth = 1.3;
-
-    keypoints.forEach(k => {
-        const partesHolograma = [
-            "nose", "leftShoulder", "rightShoulder", 
-            "leftElbow", "rightElbow", "leftWrist", "rightWrist"
-        ];
-        
-        if (k.score >= minConfidence && partesHolograma.includes(k.part)) {
-            ctx.shadowBlur = 6;
-            ctx.fillStyle = "rgba(0, 255, 204, 0.1)";
-            ctx.beginPath();
-            ctx.arc(k.position.x, k.position.y, 6, 0, Math.PI * 2);
-            ctx.stroke();
-            ctx.fill();
-
-            ctx.shadowBlur = 0;
-            ctx.fillStyle = "#ffffff";
-            ctx.beginPath();
-            ctx.arc(k.position.x, k.position.y, 1.5, 0, Math.PI * 2);
-            ctx.fill();
-        }
-    });
+        // Píxel fotónico central (blanco puro)
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = "#ffffff";
+        ctx.beginPath();
+        ctx.arc(nose.position.x, nose.position.y, 2, 0, Math.PI * 2);
+        ctx.fill();
+    }
 
     ctx.restore();
 }
