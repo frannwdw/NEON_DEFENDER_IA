@@ -281,6 +281,17 @@ async function iniciarEscaneoBiometrico() {
             camaraWeb.canvas.style.objectFit = "cover";
             authWebcamContainer.appendChild(camaraWeb.canvas);
         }
+
+        // Bucle de actualización a 60 FPS de la webcam en el canvas del escáner
+        estadoApp = "escaneando";
+        const actualizarCamaraScan = () => {
+            if (estadoApp === "escaneando" && camaraWeb) {
+                camaraWeb.update();
+                requestAnimationFrame(actualizarCamaraScan);
+            }
+        };
+        requestAnimationFrame(actualizarCamaraScan);
+
     } catch (eWebcam) {
         console.warn("Acceso a webcam bloqueado para escaneo:", eWebcam.message);
         if (authLogText) authLogText.innerText = "ERROR: WEBCAM NO HABILITADA";
