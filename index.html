@@ -39,20 +39,20 @@
         <!-- Tarjetas de Características Técnicas -->
         <section class="landing-features">
             <div class="feature-card">
-                <span class="icon">🏃</span>
-                <h3>Reconocimiento de Postura</h3>
-                <p>La red neuronal estima tu pose física. Inclínate lateralmente para maniobrar la nave de forma fluida.
+                
+                <h3>POSTURA NEURAL</h3>
+                <p>Estimacion de pose en tiempo real. Inclinate lateralmente para maniobrar de forma fluida.
                 </p>
             </div>
             <div class="feature-card">
-                <span class="icon">🎤</span>
-                <h3>Disparo Táctico Acústico</h3>
-                <p>Grita "¡PUM PUM!" consecutivamente para disparar ráfagas continuas de láser magenta.</p>
+                
+                <h3>DISPARO ACUSTICO</h3>
+                <p>Reconocimiento de comandos por voz. Di "PUM" para disparar rafagas continuas de laser.</p>
             </div>
             <div class="feature-card">
-                <span class="icon">🛡️</span>
-                <h3>Campo de Fuerza Cian</h3>
-                <p>Activa el escudo cyberpunk presionando Shift, la tecla 'S' o diciendo "escudo" al micrófono.</p>
+                
+                <h3>ESCUDO CYBERPUNK</h3>
+                <p>Barrera de plasma auto-cian. Activalo con Shift, tecla "S" o comando por voz.</p>
             </div>
         </section>
 
@@ -114,22 +114,22 @@
                 <ul class="nav-menu">
                     <li class="nav-item">
                         <button class="nav-btn active" id="btn-tab-combat" data-tab="tab-combat">
-                            <span class="icon">🚀</span> [01] Combat Mission
+                             [01] Combat Mission
                         </button>
                     </li>
                     <li class="nav-item">
                         <button class="nav-btn" id="btn-tab-diag" data-tab="tab-diag">
-                            <span class="icon">🧠</span> [02] AI Diagnostics
+                             [02] AI Diagnostics
                         </button>
                     </li>
                     <li class="nav-item">
                         <button class="nav-btn" id="btn-tab-archives" data-tab="tab-archives">
-                            <span class="icon">📂</span> [03] Archives & Lore
+                             [03] Archives & Lore
                         </button>
                     </li>
                     <li class="nav-item">
                         <button class="nav-btn" id="btn-tab-leaderboard" data-tab="tab-leaderboard">
-                            <span class="icon">🏆</span> [04] Leaderboard
+                             [04] Leaderboard
                         </button>
                     </li>
                 </ul>
@@ -155,8 +155,7 @@
                     <header class="panel-header">
                         <div class="panel-title-container">
                             <h2>TACTICAL COMMAND</h2>
-                            <p style="color: var(--cyan); font-weight: bold; font-size: 11px; letter-spacing: 1px;">🏃
-                                INCLÍNATE PARA VOLAR · 💥 DI PUM PARA FUEGO CONTINUO</p>
+                            <p style="color: var(--cyan); font-weight: bold; font-size: 11px; letter-spacing: 1px;">CONTROL LATERAL POR POSTURA · RAFAGA SÓNICA CONTINUA POR COMANDO DE VOZ</p>
                         </div>
                         <div class="hud-time" id="hud-timer">SYS_TIME: OK</div>
                     </header>
@@ -173,7 +172,7 @@
                         </div>
                         <div class="footer-stat" style="text-align: center;">
                             <span>DISPARO SÓNICO</span>
-                            <span class="val" style="color: var(--magenta);">[DI "PUM PUM" (CONTINUO)]</span>
+                            <span class="val" style="color: var(--magenta);">[DI "PUM" / FUEGO CONTINUO]</span>
                         </div>
                         <div class="footer-stat" style="text-align: right;">
                             <span>ESCUDO PROTECTOR</span>
@@ -194,7 +193,7 @@
 
                     <div class="neural-diag-grid">
                         <div class="diag-card">
-                            <h3>🏃 Neural Posture Detection</h3>
+                            <h3>NEURAL POSTURE DETECTION</h3>
                             <div class="model-test-row">
                                 <div class="test-meter">
                                     <div class="meter-label"><span>IZQUIERDA (TILT LEFT)</span><span
@@ -221,7 +220,7 @@
                         </div>
 
                         <div class="diag-card">
-                            <h3>🎤 Vocal FFT Amplitude</h3>
+                            <h3>VOCAL FFT AMPLITUDE</h3>
                             <div class="model-test-row">
                                 <div class="test-meter">
                                     <div class="meter-label"><span>DISPARO (PUM) SIGNAL</span><span
@@ -265,10 +264,10 @@
 
                     <div class="database-layout">
                         <ul class="database-list">
-                            <li><button class="db-item-btn active" data-ship="ship-defender">🚀 Neon Defender</button>
+                            <li><button class="db-item-btn active" data-ship="ship-defender">NEON DEFENDER</button>
                             </li>
-                            <li><button class="db-item-btn" data-ship="ship-invader">🛸 Hex Invader</button></li>
-                            <li><button class="db-item-btn" data-ship="ship-shield">🛡️ Force Shield</button></li>
+                            <li><button class="db-item-btn" data-ship="ship-invader">HEX INVADER</button></li>
+                            <li><button class="db-item-btn" data-ship="ship-shield">FORCE SHIELD</button></li>
                         </ul>
                         <div class="database-detail">
                             <div class="detail-header">
@@ -351,17 +350,17 @@
             <!-- BARRA LATERAL DERECHA: TELEMETRÍA Y WEBCAM (Se oculta y adapta en móvil) -->
             <aside class="diagnostics-panel">
                 <div>
-                    <div class="section-tag">📡 Mini Cam View</div>
+                    <div class="section-tag">MINI CAM VIEW</div>
                     <div class="pip-wrapper">
                         <div id="pip-camara"></div>
                     </div>
                 </div>
 
                 <div>
-                    <div class="section-tag">🧠 AI Status Led</div>
+                    <div class="section-tag">AI STATUS LED</div>
                     <div class="mini-card" id="estado-postura">
                         <div class="mini-card-info">
-                            <h4>🏃 Postura IA</h4>
+                            <h4>POSTURA IA</h4>
                             <p class="prediccion">Desconectado</p>
                         </div>
                         <div class="status-led" id="led-postura"></div>
@@ -369,7 +368,7 @@
 
                     <div class="mini-card" id="estado-voz">
                         <div class="mini-card-info">
-                            <h4>🎤 Audio IA</h4>
+                            <h4>AUDIO IA</h4>
                             <p class="prediccion">Desconectado</p>
                         </div>
                         <div class="status-led" id="led-voz"></div>
@@ -377,7 +376,7 @@
 
                     <div class="mini-card" id="estado-vision">
                         <div class="mini-card-info">
-                            <h4>🎮 Engine</h4>
+                            <h4>ENGINE</h4>
                             <p class="prediccion">En Espera</p>
                         </div>
                         <div class="status-led" id="led-vision"></div>
@@ -385,7 +384,7 @@
                 </div>
 
                 <div>
-                    <div class="section-tag">📊 Telemetry</div>
+                    <div class="section-tag">TELEMETRY</div>
                     <div class="telemetry-block">
                         <div class="telemetry-row">
                             <span>LATENCY</span>
