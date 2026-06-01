@@ -139,7 +139,7 @@ async function iniciarEscaneoBiometrico() {
                     )) {
                         disparoDetectado = true;
                         const visualLabel = (ganadora === "Class 2") ? "PUM" : ganadora.toUpperCase();
-                        if (textoEstadoVoz) textoEstadoVoz.innerText = `💥 DISPARO: ${visualLabel}`;
+                        if (textoEstadoVoz) textoEstadoVoz.innerText = `FUEGO: ${visualLabel}`;
                     } 
                     else if (maxP >= CONFIG_IA.UMBRAL_CONFIANZA_AUDIO && (
                              etiquetaNorm.includes("escudo") || 
@@ -147,7 +147,7 @@ async function iniciarEscaneoBiometrico() {
                              etiquetaNorm.includes("proteger") || 
                              etiquetaNorm.includes("protect"))) {
                         escudoDetectado = true;
-                        if (textoEstadoVoz) textoEstadoVoz.innerText = `🛡️ ESCUDO: ${ganadora.toUpperCase()}`;
+                        if (textoEstadoVoz) textoEstadoVoz.innerText = `ESCUDO: ${ganadora.toUpperCase()}`;
                     } 
                     else {
                         const visualLabel = (ganadora === "Class 2") ? "PUM" : ganadora;
