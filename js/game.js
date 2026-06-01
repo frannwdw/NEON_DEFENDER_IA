@@ -13,6 +13,10 @@
 // ============================================================================
 // 1. CONFIGURACIÓN Y ESTADO GLOBAL DEL JUGADOR
 // ============================================================================
+const ES_MOVIL_JUEGO = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+const TOTAL_ESTRELLAS = ES_MOVIL_JUEGO ? 28 : 60;
+const MAX_PARTICULAS = ES_MOVIL_JUEGO ? 80 : 180;
+
 let jugador = {
     // Coordenadas en el espacio 2D
     x: 320,
@@ -64,7 +68,7 @@ const RITMO_DISPARO = 12;     // Cadencia de disparo interna: 1 láser cada 12 f
  */
 function inicializarEstrellas() {
     estrellas = [];
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < TOTAL_ESTRELLAS; i++) {
         estrellas.push({
             x: Math.random() * 640,
             y: Math.random() * 360,
@@ -113,8 +117,9 @@ function dibujarEstrellas(ctx) {
  * @param {number} cantidad - Número de partículas a emitir
  */
 function crearExplosion(x, y, color, cantidad = 12) {
-    for (let i = 0; i < cantidad; i++) {
-        const angulo = (Math.PI * 2 / cantidad) * i + Math.random() * 0.3;
+    const total = ES_MOVIL_JUEGO ? Math.max(2, Math.ceil(cantidad * 0.55)) : cantidad;
+    for (let i = 0; i < total; i++) {
+        const angulo = (Math.PI * 2 / total) * i + Math.random() * 0.3;
         const spd = Math.random() * 3.5 + 1.2;
         particulas.push({
             x: x,
@@ -143,6 +148,10 @@ function crearExplosion(x, y, color, cantidad = 12) {
         esFlash: true,
         esBurbujaTrail: false
     });
+
+    if (particulas.length > MAX_PARTICULAS) {
+        particulas.splice(0, particulas.length - MAX_PARTICULAS);
+    }
 }
 
 /**
@@ -150,6 +159,10 @@ function crearExplosion(x, y, color, cantidad = 12) {
  * @param {CanvasRenderingContext2D} ctx - Contexto 2D del canvas
  */
 function actualizarParticulas(ctx) {
+    if (particulas.length > MAX_PARTICULAS) {
+        particulas.splice(0, particulas.length - MAX_PARTICULAS);
+    }
+
     for (let i = particulas.length - 1; i >= 0; i--) {
         const p = particulas[i];
         
@@ -589,7 +602,8 @@ function actualizarYDibujarJuego(ctx, postura, disparoSonido, activarEscudo) {
     // --- F: EMITIR BURBUJITAS DE SEGUIMIENTO EN EL RASTRO DE LA NAVE ---
     const velocidadMovimiento = Math.abs(jugador.x - anteriorX);
     // Probabilidad base combinada con la velocidad lateral de la nave
-    if (Math.random() < 0.25 + (velocidadMovimiento * 0.15)) {
+    const probabilidadTrail = ES_MOVIL_JUEGO ? 0.10 + (velocidadMovimiento * 0.06) : 0.25 + (velocidadMovimiento * 0.15);
+    if (Math.random() < probabilidadTrail) {
         particulas.push({
             x: jugador.x + (Math.random() - 0.5) * 15,
             y: jugador.y + 14,

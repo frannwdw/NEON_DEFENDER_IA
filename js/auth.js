@@ -16,6 +16,9 @@ async function iniciarEscaneoBiometrico() {
     const authLogText = document.getElementById("auth-log-text");
     const authScreen = document.getElementById("auth-screen");
     const consoleContainer = document.getElementById("console-container");
+    const esMovil = typeof ES_MOVIL !== "undefined" && ES_MOVIL;
+    const tamanoCamara = esMovil ? 200 : 280;
+    const intervaloScanCamara = esMovil ? 100 : 16;
 
     // LEDs en parpadeo táctico de inicio
     if (ledPostura) ledPostura.className = "status-led loading";
@@ -28,7 +31,7 @@ async function iniciarEscaneoBiometrico() {
 
     // A. INICIAR WEBCAM DE FORMA INMEDIATA PARA EL ESCÁNER BIOMÉTRICO
     try {
-        camaraWeb = new tmPose.Webcam(280, 280, true);
+        camaraWeb = new tmPose.Webcam(tamanoCamara, tamanoCamara, true);
         await camaraWeb.setup();
         await camaraWeb.play();
 
@@ -44,9 +47,13 @@ async function iniciarEscaneoBiometrico() {
 
         // Bucle de actualización a 60 FPS de la webcam en el canvas del escáner
         estadoApp = "escaneando";
-        const actualizarCamaraScan = () => {
+        let ultimoScanCamara = 0;
+        const actualizarCamaraScan = (timestamp) => {
             if (estadoApp === "escaneando" && camaraWeb) {
-                camaraWeb.update();
+                if (!ultimoScanCamara || timestamp - ultimoScanCamara >= intervaloScanCamara) {
+                    camaraWeb.update();
+                    ultimoScanCamara = timestamp;
+                }
                 requestAnimationFrame(actualizarCamaraScan);
             }
         };
@@ -59,6 +66,7 @@ async function iniciarEscaneoBiometrico() {
 
     // B. INICIAR CARGA DE MODELOS TENSORFLOW EN SEGUNDO PLANO
     let modelosCargados = false;
+    let errorCargaModelos = null;
     (async () => {
         try {
             // 1. Descargar PoseNet
@@ -121,10 +129,11 @@ async function iniciarEscaneoBiometrico() {
                         const visualLabel = (ganadora === "Class 2") ? "PUM" : ganadora.toUpperCase();
                         if (textoEstadoVoz) textoEstadoVoz.innerText = `💥 DISPARO: ${visualLabel}`;
                     } 
-                    else if (etiquetaNorm.includes("escudo") || 
+                    else if (maxP >= 0.70 && (
+                             etiquetaNorm.includes("escudo") || 
                              etiquetaNorm.includes("shield") || 
                              etiquetaNorm.includes("proteger") || 
-                             etiquetaNorm.includes("protect")) {
+                             etiquetaNorm.includes("protect"))) {
                         escudoDetectado = true;
                         if (textoEstadoVoz) textoEstadoVoz.innerText = `🛡️ ESCUDO: ${ganadora.toUpperCase()}`;
                     } 
@@ -133,7 +142,7 @@ async function iniciarEscaneoBiometrico() {
                         if (textoEstadoVoz) textoEstadoVoz.innerText = `${visualLabel} (${Math.round(maxP * 100)}%)`;
                     }
                 }, {
-                    includeSpectrogram: true,
+                    includeSpectrogram: false,
                     probabilityThreshold: 0.70,
                     invokeCallbackOnNoiseAndUnknown: true,
                     overlapFactor: 0.50
@@ -150,6 +159,7 @@ async function iniciarEscaneoBiometrico() {
             modelosCargados = true;
         } catch (errModelos) {
             console.error("Fallo carga de modelos:", errModelos);
+            errorCargaModelos = errModelos;
             if (authLogText) authLogText.innerText = "ERROR ENLACE NEURAL: " + errModelos.message;
         }
     })();
@@ -168,6 +178,18 @@ async function iniciarEscaneoBiometrico() {
     ];
 
     const intervaloScan = setInterval(() => {
+        if (errorCargaModelos) {
+            clearInterval(intervaloScan);
+            if (authProgress) authProgress.style.width = "100%";
+            if (authLogText) {
+                authLogText.style.color = "var(--rojo-neon)";
+                authLogText.innerText = "ERROR ENLACE NEURAL: RECARGA LA PÁGINA";
+            }
+            if (ledPostura) ledPostura.className = "status-led";
+            if (ledVision) ledVision.className = "status-led";
+            return;
+        }
+
         // Avance irregular para hacerlo realista
         if (progreso < 95) {
             progreso += Math.random() * 9 + 3;

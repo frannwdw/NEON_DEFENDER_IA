@@ -13,18 +13,44 @@
 
 @media (max-width: 768px) {
     body, html { 
+        overflow-x: hidden;
         overflow-y: auto; 
-        height: auto; 
+        min-height: 100dvh; 
     }
     
     /* Desactivar videos pesados y decoraciones de fondo en celular */
-    #bg-video, .bg-grid, .bg-radial, .scanlines {
+    #bg-video, .bg-grid, .scanlines {
         display: none !important;
     }
     
     /* Forzar fondo puramente negro sólido en celulares */
     body {
         background: #000000 !important;
+    }
+
+    .landing-container,
+    .auth-container,
+    .console-container-wrapper,
+    .tactical-console {
+        min-height: 100dvh !important;
+    }
+
+    .feature-card,
+    .auth-card,
+    .tactical-console,
+    .seccion-camara {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        box-shadow: none !important;
+    }
+
+    .console-corner,
+    .seccion-camara::after,
+    .face-oval,
+    .scan-bar,
+    .auth-log,
+    .status-led.loading {
+        animation: none !important;
     }
 
     /* Landing de bienvenida en celular: apilado limpio y scrollable */
@@ -52,7 +78,7 @@
     /* MODAL DE JUEGO MÓVIL: ELIMINACIÓN DE RUIDO VISUAL Y BARRAS */
     .tactical-console {
         display: block !important;
-        height: 100vh !important;
+        height: 100dvh !important;
         grid-template-columns: 1fr !important;
     }
 
@@ -101,45 +127,9 @@
         display: none !important;
     }
 
-    /* CÁMARA PIP FLOTANTE EN ESQUINA SUPERIOR DERECHA */
+    /* Ocultar PIP reduce composición de GPU durante el juego */
     .diagnostics-panel {
-        position: absolute !important;
-        top: 15px !important;
-        right: 15px !important;
-        width: 100px !important;
-        height: 75px !important;
-        border: none !important;
-        background: transparent !important;
-        padding: 0 !important;
-        z-index: 100 !important;
-        pointer-events: none !important;
-        display: block !important;
-    }
-
-    /* Ocultar telemetrías y LEDs redundantes en móvil */
-    .diagnostics-panel > div:not(:first-child) {
         display: none !important;
     }
 
-    .diagnostics-panel .section-tag {
-        display: none !important;
-    }
-
-    .pip-wrapper {
-        width: 100% !important;
-        height: 100% !important;
-    }
-
-    #pip-camara {
-        width: 100% !important;
-        height: 100% !important;
-        border: 2px solid var(--cyan) !important;
-        box-shadow: var(--glow-cyan) !important;
-    }
-
-    #pip-camara::before {
-        font-size: 6px !important;
-        top: 4px !important;
-        left: 5px !important;
-    }
 }

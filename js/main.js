@@ -10,6 +10,10 @@
 // Enlaces oficiales de los modelos entrenados en Teachable Machine de Google
 const ENLACE_MODELO_POSTURA = "https://teachablemachine.withgoogle.com/models/ihP9Lqj84/";
 const ENLACE_MODELO_VOZ = "https://teachablemachine.withgoogle.com/models/vuA-wzQ23/";
+const ES_MOVIL = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+const FPS_JUEGO_OBJETIVO = 60; // Forzamos 60 FPS en todas las plataformas para mantener la misma física y velocidad del juego
+const INTERVALO_IA_MS = ES_MOVIL ? 85 : 40; // Optimización de IA: Procesamiento espaciado en móvil para ahorrar CPU y batería
+const COLOR_CYAN_CANVAS = "#00ffcc";
 
 // Variables de estado neural y captura multimedia
 let modeloPostura;             // Instancia de PoseNet
@@ -30,31 +34,7 @@ let telemetryLatency, telemetryVector, telemetryFps;
 let barTiltLeft, barTiltCenter, barTiltRight, labelTiltLeft, labelTiltCenter, labelTiltRight;
 let barAudioShot, barAudioNoise, labelAudioShot, labelAudioNoise;
 let lienzo, ctx;
-
-/**
- * Dibuja la pantalla de carga en el lienzo del juego
- */
-function dibujarPantallaCarga(mensaje) {
-    if (!ctx) return;
-    ctx.fillStyle = "#020206";
-    ctx.fillRect(0, 0, 640, 360);
-    
-    ctx.font = "bold 13px 'Orbitron', monospace";
-    ctx.fillStyle = "#00ffcc";
-    ctx.textAlign = "center";
-    ctx.fillText("ESTABLECIENDO ENLACE NEURAL", 320, 145);
-    
-    ctx.font = "12px 'Rajdhani', sans-serif";
-    ctx.fillStyle = "rgba(209, 226, 247, 0.7)";
-    ctx.fillText(mensaje.toUpperCase(), 320, 180);
-    
-    ctx.strokeStyle = "rgba(0, 255, 204, 0.2)";
-    ctx.strokeRect(220, 210, 200, 8);
-    ctx.fillStyle = "#00ffcc";
-    const w = 45 + Math.sin(Date.now() * 0.005) * 35;
-    ctx.fillRect(320 - w/2, 212, w, 4);
-    ctx.textAlign = "left";
-}
+let ultimoFrameJuego = 0;
 
 /**
  * Dibuja el estado "Listo para despegue" con el botón interactivo
@@ -99,6 +79,7 @@ function dibujarPantallaListo() {
         
         inicializarDatosJuego();
         estadoApp = "jugando";
+        ultimoFrameJuego = 0;
         window.requestAnimationFrame(bucleDelJuego);
     };
 
@@ -203,7 +184,7 @@ async function bucleIA() {
         telemetryLatency.innerText = `${latencia} ms`;
     }
 
-    setTimeout(bucleIA, 40);
+    setTimeout(bucleIA, INTERVALO_IA_MS);
 }
 
 /**
@@ -225,8 +206,8 @@ function dibujarEsqueletoHolografico(ctx, keypoints, minConfidence = 0.40) {
 
         // Círculo exterior táctico (neón cian)
         ctx.shadowBlur = 10;
-        ctx.shadowColor = "var(--cyan)";
-        ctx.strokeStyle = "var(--cyan)";
+        ctx.shadowColor = COLOR_CYAN_CANVAS;
+        ctx.strokeStyle = COLOR_CYAN_CANVAS;
         ctx.fillStyle = "rgba(0, 255, 204, 0.18)";
         ctx.lineWidth = 1.8;
         
@@ -251,6 +232,13 @@ function dibujarEsqueletoHolografico(ctx, keypoints, minConfidence = 0.40) {
  */
 function bucleDelJuego(timestamp) {
     if (estadoApp !== "jugando") return;
+
+    const intervaloFrame = 1000 / FPS_JUEGO_OBJETIVO;
+    if (ultimoFrameJuego && timestamp - ultimoFrameJuego < intervaloFrame) {
+        window.requestAnimationFrame(bucleDelJuego);
+        return;
+    }
+    ultimoFrameJuego = timestamp;
 
     medirFps(timestamp);
     ctx.clearRect(0, 0, 640, 360);
@@ -310,16 +298,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // Inicializar cabina y relojes
     inicializarTabs();
     inicializarDatabase();
-    actualizarRelojHUD();
+    if (!ES_MOVIL) actualizarRelojHUD();
 
     const btnIngresar = document.getElementById("btn-ingresar");
     const landingPage = document.getElementById("landing-page");
     const bgVideo = document.getElementById("bg-video");
 
-    const esMovil = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
-
     if (bgVideo) {
-        if (esMovil) {
+        if (ES_MOVIL) {
             bgVideo.pause();
             bgVideo.src = "";
             bgVideo.load();
@@ -340,7 +326,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 authScreen.style.display = "flex";
             }
             
-            if (!esMovil && bgVideo) {
+            if (!ES_MOVIL && bgVideo) {
                 const bgVideoDesktop = document.getElementById("bg-video");
                 if (bgVideoDesktop) {
                     bgVideoDesktop.src = "fondo2.mp4";
