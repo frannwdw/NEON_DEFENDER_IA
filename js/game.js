@@ -475,18 +475,22 @@ function dibujarEnemigo(ctx, ene) {
 function dibujarHUD(ctx) {
     ctx.save();
     
-    // --- MARCADOR DE VIDAS (Corazones de neón magenta) ---
+    // --- MARCADOR DE VIDAS (Barras de núcleo de energía de neón magenta) ---
     aplicarSombraNeon(ctx, "#ff0044", 8);
-    ctx.font = "bold 15px 'Orbitron', monospace";
+    ctx.font = "bold 12px 'Orbitron', monospace";
     ctx.fillStyle = "#ff4466";
+    ctx.textAlign = "left";
+    ctx.fillText("VIDAS:", 18, 28);
+    
+    const vidasOffset = 72;
     for (let i = 0; i < jugador.vida; i++) {
-        ctx.fillText("♥", 18 + i * 24, 28);
+        ctx.fillRect(vidasOffset + i * 16, 17, 10, 11);
     }
-    // Corazones vacíos/gastados
+    // Núcleos dañados/vacíos
     ctx.fillStyle = "rgba(255, 255, 255, 0.12)";
     desactivarSombraNeon(ctx);
     for (let i = jugador.vida; i < 3; i++) {
-        ctx.fillText("♥", 18 + i * 24, 28);
+        ctx.fillRect(vidasOffset + i * 16, 17, 10, 11);
     }
 
     // --- INDICADOR DE ESCUDO CYBERPUNK ---
