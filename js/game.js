@@ -119,6 +119,7 @@ inicializarEstrellas();
  * @param {CanvasRenderingContext2D} ctx - Contexto 2D del canvas
  */
 function dibujarEstrellas(ctx) {
+    ctx.fillStyle = "#ffffff";
     estrellas.forEach(s => {
         s.y += s.velocidad;
         s.parpadeo += 0.025; // Control de destello
@@ -131,10 +132,8 @@ function dibujarEstrellas(ctx) {
         
         const alpha = s.alpha * (0.7 + 0.3 * Math.sin(s.parpadeo));
         ctx.globalAlpha = alpha;
-        ctx.fillStyle = "#ffffff";
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.radio, 0, Math.PI * 2);
-        ctx.fill();
+        // Dibujamos un rectángulo en vez de un círculo (arco) para acelerar drásticamente el renderizado de la GPU/CPU
+        ctx.fillRect(s.x - s.radio, s.y - s.radio, s.radio * 2, s.radio * 2);
     });
     ctx.globalAlpha = 1.0; // Restablecer opacidad
 }
@@ -220,8 +219,8 @@ function actualizarParticulas(ctx) {
         const r = Math.max(0.1, p.radio * p.vida);
 
         if (p.esBurbujaTrail) {
-            // RENDIMIENTO E ILUSIÓN ÓPTICA DE BURBUJAS DE NEÓN FLOTANTES
-            aplicarSombraNeon(ctx, p.color, 8);
+            // RENDIMIENTO: Desactivamos sombras de neón en estelas para un ahorro masivo de GPU/CPU
+            desactivarSombraNeon(ctx);
             ctx.strokeStyle = p.color;
             ctx.lineWidth = 1.3;
             

@@ -69,6 +69,18 @@ async function iniciarEscaneoBiometrico() {
     let errorCargaModelos = null;
     (async () => {
         try {
+            // Optimizar rendimiento de GPU WebGL en TensorFlow.js antes de cargar
+            if (typeof tf !== 'undefined') {
+                try {
+                    tf.ENV.set('WEBGL_FORCE_F16_TEXTURES', true);
+                    tf.ENV.set('WEBGL_PACK', true);
+                    tf.ENV.set('WEBGL_MAX_TEXTURE_SIZE', 1024);
+                    console.log("[GPU OPTIMIZER]: TensorFlow.js WebGL performance flags initialized successfully.");
+                } catch (eTf) {
+                    console.warn("TF GPU optimizations could not be applied:", eTf.message);
+                }
+            }
+
             // 1. Descargar PoseNet
             modeloPostura = await tmPose.load(
                 CONFIG_IA.MODELO_POSTURA_URL + "model.json",
