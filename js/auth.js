@@ -71,8 +71,8 @@ async function iniciarEscaneoBiometrico() {
         try {
             // 1. Descargar PoseNet
             modeloPostura = await tmPose.load(
-                ENLACE_MODELO_POSTURA + "model.json",
-                ENLACE_MODELO_POSTURA + "metadata.json"
+                CONFIG_IA.MODELO_POSTURA_URL + "model.json",
+                CONFIG_IA.MODELO_POSTURA_URL + "metadata.json"
             );
             if (textoEstadoPostura) textoEstadoPostura.innerText = "Postura: Conectada";
             if (ledPostura) ledPostura.className = "status-led ready";
@@ -81,8 +81,8 @@ async function iniciarEscaneoBiometrico() {
             try {
                 modeloVoz = speechCommands.create(
                     "BROWSER_FFT", undefined,
-                    ENLACE_MODELO_VOZ + "model.json",
-                    ENLACE_MODELO_VOZ + "metadata.json"
+                    CONFIG_IA.MODELO_VOZ_URL + "model.json",
+                    CONFIG_IA.MODELO_VOZ_URL + "metadata.json"
                 );
                 await modeloVoz.ensureModelLoaded();
                 
@@ -118,7 +118,7 @@ async function iniciarEscaneoBiometrico() {
                     }
 
                     const etiquetaNorm = ganadora.toLowerCase();
-                    if (maxP >= 0.70 && (
+                    if (maxP >= CONFIG_IA.UMBRAL_CONFIANZA_AUDIO && (
                         etiquetaNorm.includes("disparo") || 
                         etiquetaNorm.includes("pum") || 
                         etiquetaNorm.includes("pew") || 
@@ -129,7 +129,7 @@ async function iniciarEscaneoBiometrico() {
                         const visualLabel = (ganadora === "Class 2") ? "PUM" : ganadora.toUpperCase();
                         if (textoEstadoVoz) textoEstadoVoz.innerText = `💥 DISPARO: ${visualLabel}`;
                     } 
-                    else if (maxP >= 0.70 && (
+                    else if (maxP >= CONFIG_IA.UMBRAL_CONFIANZA_AUDIO && (
                              etiquetaNorm.includes("escudo") || 
                              etiquetaNorm.includes("shield") || 
                              etiquetaNorm.includes("proteger") || 
@@ -143,7 +143,7 @@ async function iniciarEscaneoBiometrico() {
                     }
                 }, {
                     includeSpectrogram: false,
-                    probabilityThreshold: 0.70,
+                    probabilityThreshold: CONFIG_IA.UMBRAL_CONFIANZA_AUDIO,
                     invokeCallbackOnNoiseAndUnknown: true,
                     overlapFactor: 0.50
                 });

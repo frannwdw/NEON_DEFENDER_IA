@@ -7,9 +7,6 @@
  * ============================================================================
  */
 
-// Enlaces oficiales de los modelos entrenados en Teachable Machine de Google
-const ENLACE_MODELO_POSTURA = "https://teachablemachine.withgoogle.com/models/ihP9Lqj84/";
-const ENLACE_MODELO_VOZ = "https://teachablemachine.withgoogle.com/models/vuA-wzQ23/";
 const ES_MOVIL = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
 const FPS_JUEGO_OBJETIVO = 60; // Forzamos 60 FPS en todas las plataformas para mantener la misma física y velocidad del juego
 const INTERVALO_IA_MS = ES_MOVIL ? 85 : 40; // Optimización de IA: Procesamiento espaciado en móvil para ahorrar CPU y batería
@@ -130,7 +127,7 @@ async function bucleIA() {
 
                 // Control de precisión continuo por la nariz (Bypassea el snapping rígido)
                 const nose = pose.keypoints.find(k => k.part === "nose");
-                if (nose && nose.score >= 0.40) {
+                if (nose && nose.score >= CONFIG_IA.UMBRAL_CONFIANZA_NARIZ) {
                     const camWidth = (camaraWeb && camaraWeb.canvas) ? camaraWeb.canvas.width : 280;
                     const camX = nose.position.x;
                     
@@ -189,7 +186,7 @@ async function bucleIA() {
 /**
  * Dibuja un puntero holográfico de precisión (un solo puntito brillante) en la nariz del jugador
  */
-function dibujarEsqueletoHolografico(ctx, keypoints, minConfidence = 0.40) {
+function dibujarEsqueletoHolografico(ctx, keypoints, minConfidence = CONFIG_IA.UMBRAL_CONFIANZA_NARIZ) {
     ctx.save();
     
     // Buscar la nariz para dibujar el puntito táctico de precisión

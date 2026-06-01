@@ -19,7 +19,20 @@ const MAX_PARTICULAS = ES_MOVIL_JUEGO ? 80 : 180;
 
 
 // ============================================================================
-// 0. SISTEMA DE SEGURIDAD Y CALIBRACIÓN DE RENDIMIENTO GRÁFICO (AUTO-GLOW REGULATION)
+// 0. CONFIGURACIÓN CENTRAL DE INTELIGENCIA ARTIFICIAL Y RENDIMIENTO (CONFIG_IA)
+// ============================================================================
+const CONFIG_IA = {
+    // Enlaces oficiales de Google Teachable Machine (Modelos Entrenados)
+    MODELO_POSTURA_URL: "https://teachablemachine.withgoogle.com/models/ihP9Lqj84/",
+    MODELO_VOZ_URL: "https://teachablemachine.withgoogle.com/models/vuA-wzQ23/",
+    
+    // Umbrales de precisión (Certeza de clasificación TensorFlow)
+    UMBRAL_CONFIANZA_NARIZ: 0.40,  // Nivel de confianza mínimo para trackear nariz y mover nave
+    UMBRAL_CONFIANZA_AUDIO: 0.70   // Nivel de confianza mínimo para procesar órdenes de voz (pum, escudo)
+};
+
+// ============================================================================
+// SISTEMA DE SEGURIDAD Y CALIBRACIÓN DE RENDIMIENTO GRÁFICO (AUTO-GLOW REGULATION)
 // ============================================================================
 let HABILITAR_SOMBRAS = !ES_MOVIL_JUEGO; // Desactivado por defecto en móviles, activado en PC
 let MAX_BLUR_NEON = 4; // Cota superior de radio para evitar el alto coste de Gaussian Blur en CPU de PC
