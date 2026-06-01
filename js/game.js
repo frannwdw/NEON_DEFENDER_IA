@@ -17,6 +17,26 @@ const ES_MOVIL_JUEGO = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera
 const TOTAL_ESTRELLAS = ES_MOVIL_JUEGO ? 28 : 60;
 const MAX_PARTICULAS = ES_MOVIL_JUEGO ? 80 : 180;
 
+
+// ============================================================================
+// 0. SISTEMA DE SEGURIDAD Y CALIBRACIÓN DE RENDIMIENTO GRÁFICO (AUTO-GLOW REGULATION)
+// ============================================================================
+let HABILITAR_SOMBRAS = !ES_MOVIL_JUEGO; // Desactivado por defecto en móviles, activado en PC
+let MAX_BLUR_NEON = 4; // Cota superior de radio para evitar el alto coste de Gaussian Blur en CPU de PC
+
+function aplicarSombraNeon(ctx, color, blur) {
+    if (HABILITAR_SOMBRAS && blur > 0) {
+        ctx.shadowBlur = Math.min(blur, MAX_BLUR_NEON);
+        ctx.shadowColor = color;
+    } else {
+        ctx.shadowBlur = 0;
+    }
+}
+
+function desactivarSombraNeon(ctx) {
+    ctx.shadowBlur = 0;
+}
+
 let jugador = {
     // Coordenadas en el espacio 2D
     x: 320,
@@ -188,8 +208,7 @@ function actualizarParticulas(ctx) {
 
         if (p.esBurbujaTrail) {
             // RENDIMIENTO E ILUSIÓN ÓPTICA DE BURBUJAS DE NEÓN FLOTANTES
-            ctx.shadowBlur = 8;
-            ctx.shadowColor = p.color;
+            aplicarSombraNeon(ctx, p.color, 8);
             ctx.strokeStyle = p.color;
             ctx.lineWidth = 1.3;
             
@@ -203,8 +222,7 @@ function actualizarParticulas(ctx) {
             ctx.fill();
         } else {
             // RENDERIZADO DE CHISPAS DE EXPLOSIÓN Y DESTELLOS DE CAÑÓN
-            ctx.shadowBlur = p.esFlash ? 16 : 6;
-            ctx.shadowColor = p.color;
+            aplicarSombraNeon(ctx, p.color, p.esFlash ? 16 : 6);
             ctx.fillStyle = p.color;
             
             ctx.beginPath();
@@ -278,15 +296,13 @@ function dibujarPantallaFin(ctx) {
     }
 
     ctx.save();
-    ctx.shadowBlur = 25;
-    ctx.shadowColor = "#ff0055";
+    aplicarSombraNeon(ctx, "#ff0055", 25);
     ctx.fillStyle = "#ff0055";
     ctx.font = "bold 38px 'Orbitron', monospace";
     ctx.textAlign = "center";
     ctx.fillText("CONEXIÓN INTERRUMPIDA", 320, 130);
 
-    ctx.shadowBlur = 5;
-    ctx.shadowColor = "#00ffcc";
+    aplicarSombraNeon(ctx, "#00ffcc", 5);
     ctx.strokeStyle = "rgba(0, 255, 204, 0.4)";
     ctx.beginPath(); ctx.moveTo(180, 150); ctx.lineTo(460, 150); ctx.stroke();
 
@@ -294,7 +310,7 @@ function dibujarPantallaFin(ctx) {
     ctx.font = "bold 20px 'Orbitron', monospace";
     ctx.fillText(`SCORE MÁXIMO: ${jugador.puntuacion * 1000} PTS`, 320, 195);
 
-    ctx.shadowBlur = 0;
+    desactivarSombraNeon(ctx);
     ctx.fillStyle = "rgba(209, 226, 247, 0.7)";
     ctx.font = "bold 13px 'Rajdhani', sans-serif";
     ctx.fillText("INCLÍNATE A LA IZQUIERDA O DERECHA PARA RECONECTAR EL REACTOR", 320, 255);
@@ -316,8 +332,7 @@ function dibujarNave(ctx, x, y, invulnerable) {
         ctx.save();
         ctx.translate(x, y - 2);
         
-        ctx.shadowBlur = 15 + Math.sin(Date.now() * 0.025) * 5;
-        ctx.shadowColor = "#00d9ff";
+        aplicarSombraNeon(ctx, "#00d9ff", 15 + Math.sin(Date.now() * 0.025) * 5);
         ctx.strokeStyle = "rgba(0, 217, 255, 0.85)";
         ctx.lineWidth = 2 + Math.sin(Date.now() * 0.015) * 0.5;
         
@@ -346,8 +361,7 @@ function dibujarNave(ctx, x, y, invulnerable) {
 
     // --- RENDERIZAR MOTOR PROPULSOR DE PLASMA ---
     const flamaAlpha = 0.4 + 0.4 * Math.sin(Date.now() * 0.015);
-    ctx.shadowBlur = 12;
-    ctx.shadowColor = "#ff6600";
+    aplicarSombraNeon(ctx, "#ff6600", 12);
     ctx.fillStyle = `rgba(255, 100, 0, ${flamaAlpha})`;
     ctx.beginPath();
     ctx.moveTo(x - 8, y + 22);
@@ -357,8 +371,7 @@ function dibujarNave(ctx, x, y, invulnerable) {
     ctx.fill();
 
     // --- CASCO Y ALAS DE NEÓN DE LA NAVE DEFENDER ---
-    ctx.shadowBlur = 18;
-    ctx.shadowColor = "#00ffcc";
+    aplicarSombraNeon(ctx, "#00ffcc", 18);
     ctx.fillStyle = "#00ffcc";
     ctx.beginPath();
     ctx.moveTo(x, y - 22);
@@ -372,7 +385,7 @@ function dibujarNave(ctx, x, y, invulnerable) {
 
     // --- CABINA INTERIOR DE MANDO NEGRA ---
     ctx.fillStyle = "rgba(3, 3, 10, 0.85)";
-    ctx.shadowBlur = 0;
+    desactivarSombraNeon(ctx);
     ctx.beginPath();
     ctx.moveTo(x, y - 12);
     ctx.lineTo(x + 6, y + 4);
@@ -396,8 +409,7 @@ function dibujarEnemigo(ctx, ene) {
     ctx.rotate(t); // Rotación angular constante
 
     // Halo y contorno neón brillante
-    ctx.shadowBlur = 14;
-    ctx.shadowColor = "#ffcc00";
+    aplicarSombraNeon(ctx, "#ffcc00", 14);
     ctx.strokeStyle = "rgba(255, 204, 0, 0.55)";
     ctx.lineWidth = 1.5;
     
@@ -429,7 +441,7 @@ function dibujarEnemigo(ctx, ene) {
 
     // Núcleo cristalino oscuro
     ctx.fillStyle = "rgba(3, 3, 10, 0.8)";
-    ctx.shadowBlur = 0;
+    desactivarSombraNeon(ctx);
     ctx.beginPath();
     for (let i = 0; i < lados; i++) {
         const a = (Math.PI * 2 / lados) * i - Math.PI / 2;
@@ -452,8 +464,7 @@ function dibujarHUD(ctx) {
     ctx.save();
     
     // --- MARCADOR DE VIDAS (Corazones de neón magenta) ---
-    ctx.shadowBlur = 8;
-    ctx.shadowColor = "#ff0044";
+    aplicarSombraNeon(ctx, "#ff0044", 8);
     ctx.font = "bold 15px 'Orbitron', monospace";
     ctx.fillStyle = "#ff4466";
     for (let i = 0; i < jugador.vida; i++) {
@@ -461,33 +472,31 @@ function dibujarHUD(ctx) {
     }
     // Corazones vacíos/gastados
     ctx.fillStyle = "rgba(255, 255, 255, 0.12)";
-    ctx.shadowBlur = 0;
+    desactivarSombraNeon(ctx);
     for (let i = jugador.vida; i < 3; i++) {
         ctx.fillText("♥", 18 + i * 24, 28);
     }
 
     // --- INDICADOR DE ESCUDO CYBERPUNK ---
-    ctx.shadowBlur = 6;
-    ctx.shadowColor = jugador.escudoBloqueado ? "#ff0055" : "#00d9ff";
+    aplicarSombraNeon(ctx, jugador.escudoBloqueado ? "#ff0055" : "#00d9ff", 6);
     ctx.fillStyle = "rgba(0, 217, 255, 0.15)";
     ctx.fillRect(18, 40, 100, 6);
     ctx.fillStyle = jugador.escudoBloqueado ? "#ff0055" : "#00d9ff";
     ctx.fillRect(18, 40, Math.max(0, jugador.energiaEscudo), 6);
     
-    ctx.shadowBlur = 0;
+    desactivarSombraNeon(ctx);
     ctx.font = "bold 8px 'Orbitron', monospace";
     ctx.fillStyle = jugador.escudoBloqueado ? "rgba(255, 0, 85, 0.85)" : "rgba(0, 217, 255, 0.85)";
     ctx.fillText(jugador.escudoBloqueado ? "SHIELD SYSTEM: LOCK / COOLDOWN" : "SHIELD MATRIX STATUS", 18, 56);
 
     // --- MARCADOR TÁCTICO DE SCORE ---
-    ctx.shadowColor = "#00ffcc";
-    ctx.shadowBlur = 10;
+    aplicarSombraNeon(ctx, "#00ffcc", 10);
     ctx.fillStyle = "#00ffcc";
     ctx.font = "bold 14px 'Orbitron', monospace";
     ctx.textAlign = "right";
     ctx.fillText(`${String(jugador.puntuacion * 1000).padStart(6, "0")}`, 626, 28);
 
-    ctx.shadowBlur = 0;
+    desactivarSombraNeon(ctx);
     ctx.fillStyle = "rgba(0, 255, 204, 0.4)";
     ctx.font = "9px 'Orbitron', monospace";
     ctx.fillText("SCORE", 626, 40);
@@ -499,8 +508,7 @@ function dibujarHUD(ctx) {
         if (comboAlpha > 0) {
             ctx.save();
             ctx.globalAlpha = comboAlpha;
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = "#ff00ff";
+            aplicarSombraNeon(ctx, "#ff00ff", 15);
             ctx.fillStyle = "#ff00ff";
             ctx.font = `bold ${14 + jugador.combo}px 'Orbitron', monospace`;
             ctx.textAlign = "center";
@@ -650,8 +658,7 @@ function actualizarYDibujarJuego(ctx, postura, disparoSonido, activarEscudo) {
 
     // --- I: RENDERIZAR Y DESPLAZAR LÁSERES MAGENTA ACTIVOS ---
     ctx.save();
-    ctx.shadowBlur = 12;
-    ctx.shadowColor = "#ff00ff";
+    aplicarSombraNeon(ctx, "#ff00ff", 12);
     for (let i = disparos.length - 1; i >= 0; i--) {
         const las = disparos[i];
         las.y -= las.velocidad;

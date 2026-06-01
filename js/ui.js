@@ -129,8 +129,22 @@ function medirFps(timestamp) {
     framesContados++;
 
     if (timestamp - ultimoCalculoFps >= 1000) {
+
         const fps = Math.round((framesContados * 1000) / (timestamp - ultimoCalculoFps));
-        if (telemetryFps) telemetryFps.innerText = `${fps.toFixed(1)} FPS`;
+        if (telemetryFps) {
+            telemetryFps.innerText = `${fps.toFixed(1)} FPS`;
+            // DYNAMIC GRAPHICAL DOWNSCALING: Si los FPS caen por debajo de 40 en PC de forma sostenida, 
+            // apagamos las sombras de neón en caliente para priorizar jugabilidad fluida de 60 FPS
+            if (fps < 40 && typeof HABILITAR_SOMBRAS !== 'undefined' && HABILITAR_SOMBRAS) {
+                HABILITAR_SOMBRAS = false;
+                console.warn("[PERFORMANCE WARNING]: FPS dropped below 40. Auto-disabling canvas neon shadows for performance safety!");
+                telemetryFps.style.color = "var(--rojo-neon)";
+                if (typeof ledVision !== 'undefined' && ledVision) {
+                    ledVision.style.background = "var(--rojo-neon)";
+                }
+            }
+        }
+
         framesContados = 0;
         ultimoCalculoFps = timestamp;
     }

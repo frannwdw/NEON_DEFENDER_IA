@@ -45,14 +45,13 @@ function dibujarPantallaListo() {
     ctx.fillRect(0, 0, 640, 360);
 
     ctx.save();
-    ctx.shadowBlur = 15;
-    ctx.shadowColor = "#00ffcc";
+    aplicarSombraNeon(ctx, "#00ffcc", 15);
     ctx.fillStyle = "#00ffcc";
     ctx.font = "bold 25px 'Orbitron', monospace";
     ctx.textAlign = "center";
     ctx.fillText("ENLACE NEURAL ESTABLECIDO", 320, 120);
 
-    ctx.shadowBlur = 0;
+    desactivarSombraNeon(ctx);
     ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
     ctx.font = "bold 14px 'Rajdhani', sans-serif";
     ctx.fillText("REACTOR E INTELIGENCIA ARTIFICIAL INICIALIZADOS", 320, 160);
@@ -205,8 +204,7 @@ function dibujarEsqueletoHolografico(ctx, keypoints, minConfidence = 0.40) {
         const drawY = nose.position.y * 360 / camHeight;
 
         // Círculo exterior táctico (neón cian)
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = COLOR_CYAN_CANVAS;
+        aplicarSombraNeon(ctx, COLOR_CYAN_CANVAS, 10);
         ctx.strokeStyle = COLOR_CYAN_CANVAS;
         ctx.fillStyle = "rgba(0, 255, 204, 0.18)";
         ctx.lineWidth = 1.8;
@@ -217,7 +215,7 @@ function dibujarEsqueletoHolografico(ctx, keypoints, minConfidence = 0.40) {
         ctx.fill();
 
         // Píxel fotónico central (blanco puro)
-        ctx.shadowBlur = 0;
+        desactivarSombraNeon(ctx);
         ctx.fillStyle = "#ffffff";
         ctx.beginPath();
         ctx.arc(drawX, drawY, 2, 0, Math.PI * 2);
